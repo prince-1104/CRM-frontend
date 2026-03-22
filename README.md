@@ -29,6 +29,20 @@ To learn more about Next.js, take a look at the following resources:
 
 You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
 
+## Git (push this folder as its own repo)
+
+From `frontend/`:
+
+```bash
+git init
+git add .
+git commit -m "Initial commit"
+git remote add origin <your-frontend-repo-url>
+git push -u origin main
+```
+
+`.gitignore` excludes `node_modules`, `.next`, and `.env` / `.env*.local`. Use `.env.local` for API URLs and keys — do not commit it.
+
 ## Deploy on Vercel
 
 The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
