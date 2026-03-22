@@ -1,9 +1,11 @@
 "use client";
 
 import { useMemo, useState } from "react";
+import PopupForm from "./components/PopupForm";
 
 type ProductCatalogProps = {
   selectedRegion: string;
+  onGetQuote: () => void;
 };
 
 const regions = [
@@ -25,7 +27,7 @@ const products = [
   { sku: "SU-CT-005", title: "Catering Team Combo", category: "Catering" },
 ];
 
-function ProductCatalog({ selectedRegion }: ProductCatalogProps) {
+function ProductCatalog({ selectedRegion, onGetQuote }: ProductCatalogProps) {
   const [category, setCategory] = useState("All");
   const filtered = useMemo(() => {
     if (category === "All") return products;
@@ -59,6 +61,13 @@ function ProductCatalog({ selectedRegion }: ProductCatalogProps) {
             <p className="mt-3 text-xs text-slate-500">{product.sku}</p>
             <h3 className="text-lg font-semibold text-slate-900">{product.title}</h3>
             <p className="text-sm text-slate-600">{product.category}</p>
+            <button
+              type="button"
+              onClick={onGetQuote}
+              className="mt-4 w-full min-h-[48px] rounded-md bg-blue-600 px-4 py-3 text-sm font-medium text-white transition hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
+            >
+              Get Your Quote
+            </button>
           </article>
         ))}
       </div>
@@ -68,47 +77,21 @@ function ProductCatalog({ selectedRegion }: ProductCatalogProps) {
 
 export default function Home() {
   const [selectedRegion, setSelectedRegion] = useState("All Regions");
-  const [isModalOpen, setModalOpen] = useState(false);
-  const [name, setName] = useState("");
-  const [phone, setPhone] = useState("");
-  const [isSubmitting, setSubmitting] = useState(false);
-  const [thanksMessage, setThanksMessage] = useState<string | null>(null);
-
-  const submitLead = async () => {
-    setSubmitting(true);
-    setThanksMessage(null);
-    try {
-      const response = await fetch("/api/submit-lead", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ name, phone }),
-      });
-      const data = (await response.json()) as { success?: boolean; error?: string };
-      if (!response.ok || !data.success) {
-        setThanksMessage(data.error ?? "Something went wrong. Please try again.");
-        return;
-      }
-      setThanksMessage(
-        "Thanks! Our team will be in touch shortly to discuss your requirements.",
-      );
-      setName("");
-      setPhone("");
-      setModalOpen(false);
-    } finally {
-      setSubmitting(false);
-    }
-  };
+  const [showPopup, setShowPopup] = useState(false);
 
   return (
     <main className="min-h-screen bg-slate-50 text-slate-900">
-      <header className="mx-auto flex max-w-6xl items-center justify-between px-6 py-5">
+      <header className="relative z-40 mx-auto flex max-w-6xl items-center justify-between px-6 py-5">
         <div className="text-xl font-bold">Star Uniform</div>
         <nav className="hidden gap-6 text-sm md:flex">
           <a href="#catalog">Catalog</a>
           <a href="#benefits">Benefits</a>
           <a href="#contact">Contact</a>
         </nav>
-        <button className="rounded-md bg-green-600 px-4 py-2 text-sm font-medium text-white">
+        <button
+          type="button"
+          className="rounded-md bg-green-600 px-4 py-2 text-sm font-medium text-white transition hover:bg-green-700"
+        >
           WhatsApp
         </button>
       </header>
@@ -133,14 +116,15 @@ export default function Home() {
             ))}
           </select>
         </div>
-        <div className="mt-8 flex gap-3">
+        <div className="mt-8 flex flex-wrap gap-3">
           <button
-            onClick={() => setModalOpen(true)}
-            className="rounded-md bg-blue-600 px-5 py-3 font-medium text-white"
+            type="button"
+            onClick={() => setShowPopup(true)}
+            className="min-h-[48px] rounded-md bg-blue-600 px-5 py-3 font-medium text-white transition hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
           >
             Get Your Quote
           </button>
-          <a href="#catalog" className="rounded-md border border-slate-300 px-5 py-3 font-medium">
+          <a href="#catalog" className="inline-flex min-h-[48px] items-center rounded-md border border-slate-300 px-5 py-3 font-medium">
             Browse Catalog
           </a>
         </div>
@@ -162,7 +146,7 @@ export default function Home() {
       </section>
 
       <div id="catalog">
-        <ProductCatalog selectedRegion={selectedRegion} />
+        <ProductCatalog selectedRegion={selectedRegion} onGetQuote={() => setShowPopup(true)} />
       </div>
 
       <section id="benefits" className="mx-auto mt-16 grid max-w-6xl gap-4 px-6 sm:grid-cols-3">
@@ -181,57 +165,11 @@ export default function Home() {
         <div className="rounded-xl border border-slate-200 bg-white p-5">Address: Kolkata, India</div>
       </section>
 
-      {thanksMessage && (
-        <div
-          className={`fixed bottom-6 left-1/2 z-[60] max-w-lg -translate-x-1/2 rounded-lg border px-4 py-3 text-center text-sm shadow-lg ${
-            thanksMessage.startsWith("Thanks")
-              ? "border-green-200 bg-green-50 text-green-800"
-              : "border-red-200 bg-red-50 text-red-700"
-          }`}
-          role="status"
-        >
-          {thanksMessage}
-          <button
-            type="button"
-            onClick={() => setThanksMessage(null)}
-            className="ml-3 text-xs underline"
-          >
-            Dismiss
-          </button>
-        </div>
-      )}
-
-      {isModalOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4">
-          <div className="w-full max-w-md rounded-xl bg-white p-6">
-            <h2 className="text-xl font-semibold">Get Quote</h2>
-            <div className="mt-4 space-y-3">
-              <input
-                value={name}
-                onChange={(e) => setName(e.target.value)}
-                placeholder="Name"
-                className="w-full rounded-md border border-slate-300 px-3 py-2"
-              />
-              <input
-                value={phone}
-                onChange={(e) => setPhone(e.target.value)}
-                placeholder="Phone"
-                className="w-full rounded-md border border-slate-300 px-3 py-2"
-              />
-              <button
-                disabled={isSubmitting}
-                onClick={submitLead}
-                className="w-full rounded-md bg-blue-600 px-4 py-2 font-medium text-white disabled:opacity-60"
-              >
-                Submit Quote Request
-              </button>
-              <button onClick={() => setModalOpen(false)} className="w-full text-sm text-slate-500">
-                Close
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
+      <PopupForm
+        isOpen={showPopup}
+        onClose={() => setShowPopup(false)}
+        onRequestOpen={() => setShowPopup(true)}
+      />
     </main>
   );
 }

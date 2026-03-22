@@ -5,6 +5,20 @@ type LeadPayload = {
   phone?: string;
 };
 
+type BackendErrorBody = {
+  detail?: string;
+  status?: string;
+};
+
+function mapBackendMessage(detail: string | undefined): string {
+  if (!detail) return "Something went wrong. Please try again.";
+  const lower = detail.toLowerCase();
+  if (lower.includes("phone") || lower.includes("invalid phone")) {
+    return detail.includes("Invalid") ? detail : "Invalid phone format";
+  }
+  return detail;
+}
+
 export async function POST(request: Request) {
   try {
     const body = (await request.json()) as LeadPayload;
@@ -17,20 +31,34 @@ export async function POST(request: Request) {
     }
 
     const apiUrl = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:8000";
-    const response = await fetch(`${apiUrl}/api/public/submit-lead`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        full_name: body.name,
-        phone: body.phone,
-      }),
-    });
+    let response: Response;
+    try {
+      response = await fetch(`${apiUrl}/api/public/submit-lead`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          full_name: body.name,
+          phone: body.phone,
+        }),
+      });
+    } catch {
+      return NextResponse.json(
+        { success: false, error: "Network error" },
+        { status: 503 },
+      );
+    }
 
     if (!response.ok) {
-      return NextResponse.json(
-        { success: false, error: "Failed to store lead" },
-        { status: 502 },
-      );
+      let errJson: BackendErrorBody = {};
+      try {
+        errJson = (await response.json()) as BackendErrorBody;
+      } catch {
+        errJson = {};
+      }
+      const detail = typeof errJson.detail === "string" ? errJson.detail : undefined;
+      const message = mapBackendMessage(detail);
+      const status = response.status >= 400 && response.status < 500 ? response.status : 502;
+      return NextResponse.json({ success: false, error: message }, { status });
     }
 
     return NextResponse.json(
