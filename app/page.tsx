@@ -1,6 +1,7 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import Image from "next/image";
+import { useEffect, useMemo, useState } from "react";
 import PopupForm from "./components/PopupForm";
 
 type ProductCatalogProps = {
@@ -19,20 +20,48 @@ const regions = [
   "Chennai",
 ];
 
-const products = [
-  { sku: "SU-CH-001", title: "Chef Coat Pro", category: "Chef" },
-  { sku: "SU-HT-002", title: "Hotel Frontdesk Set", category: "Hotel" },
-  { sku: "SU-RS-003", title: "Restaurant Service Set", category: "Restaurant" },
-  { sku: "SU-BR-004", title: "Bar Uniform Kit", category: "Bar" },
-  { sku: "SU-CT-005", title: "Catering Team Combo", category: "Catering" },
+type ProductItem = {
+  id?: number;
+  sku: string;
+  name: string;
+  category?: string | null;
+  image_url?: string | null;
+  active?: boolean;
+};
+
+const fallbackProducts: ProductItem[] = [
+  { sku: "SU-CH-001", name: "Chef Coat Pro", category: "Chef", active: true },
+  { sku: "SU-HT-002", name: "Hotel Frontdesk Set", category: "Hotel", active: true },
+  { sku: "SU-RS-003", name: "Restaurant Service Set", category: "Restaurant", active: true },
 ];
 
 function ProductCatalog({ selectedRegion, onGetQuote }: ProductCatalogProps) {
   const [category, setCategory] = useState("All");
+  const [products, setProducts] = useState<ProductItem[]>(fallbackProducts);
+
+  useEffect(() => {
+    let mounted = true;
+    const loadProducts = async () => {
+      try {
+        const response = await fetch("/api/products", { cache: "no-store" });
+        if (!response.ok) return;
+        const data = (await response.json()) as ProductItem[];
+        if (!Array.isArray(data) || data.length === 0) return;
+        if (mounted) setProducts(data.filter((p) => p.active !== false));
+      } catch {
+        // Keep fallback catalog when backend is unavailable.
+      }
+    };
+    void loadProducts();
+    return () => {
+      mounted = false;
+    };
+  }, []);
+
   const filtered = useMemo(() => {
     if (category === "All") return products;
-    return products.filter((p) => p.category === category);
-  }, [category]);
+    return products.filter((p) => (p.category || "").toLowerCase() === category.toLowerCase());
+  }, [category, products]);
 
   return (
     <section className="mx-auto mt-16 max-w-6xl px-6">
@@ -57,10 +86,20 @@ function ProductCatalog({ selectedRegion, onGetQuote }: ProductCatalogProps) {
       <div className="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
         {filtered.map((product) => (
           <article key={product.sku} className="rounded-xl border border-slate-200 bg-white p-4">
-            <div className="aspect-video rounded-lg bg-slate-100" />
+            <div className="relative aspect-video overflow-hidden rounded-lg bg-slate-100">
+              {product.image_url ? (
+                <Image
+                  src={product.image_url}
+                  alt={product.name}
+                  fill
+                  sizes="(max-width: 768px) 100vw, 33vw"
+                  className="object-cover"
+                />
+              ) : null}
+            </div>
             <p className="mt-3 text-xs text-slate-500">{product.sku}</p>
-            <h3 className="text-lg font-semibold text-slate-900">{product.title}</h3>
-            <p className="text-sm text-slate-600">{product.category}</p>
+            <h3 className="text-lg font-semibold text-slate-900">{product.name}</h3>
+            <p className="text-sm text-slate-600">{product.category || "General"}</p>
             <button
               type="button"
               onClick={onGetQuote}
