@@ -31,13 +31,33 @@ type ProductItem = {
 
 const fallbackProducts: ProductItem[] = [
   { sku: "SU-CH-001", name: "Chef Coat Pro", category: "Chef", active: true },
-  { sku: "SU-HT-002", name: "Hotel Frontdesk Set", category: "Hotel", active: true },
-  { sku: "SU-RS-003", name: "Restaurant Service Set", category: "Restaurant", active: true },
+  { sku: "SU-HT-002", name: "Hotel Frontdesk Set", category: "Hotels", active: true },
+  { sku: "SU-RS-003", name: "Restaurant Service Set", category: "Restaurants", active: true },
 ];
+
+function catalogKeyFromImageUrl(imageUrl: string): string | null {
+  try {
+    const path = new URL(imageUrl).pathname;
+    const m = path.match(/\/(catalog\/[^/]+)$/);
+    return m ? m[1] : null;
+  } catch {
+    return null;
+  }
+}
+
+/** Same-origin proxy: R2 public URLs often return 401; backend reads with API credentials. */
+function storefrontCatalogImageSrc(imageUrl: string | null | undefined): string | null {
+  if (!imageUrl?.trim()) return null;
+  const trimmed = imageUrl.trim();
+  const key = catalogKeyFromImageUrl(trimmed);
+  if (!key) return trimmed;
+  return `/api/catalog-media/${key.split("/").map(encodeURIComponent).join("/")}`;
+}
 
 function ProductCatalog({ selectedRegion, onGetQuote }: ProductCatalogProps) {
   const [category, setCategory] = useState("All");
   const [products, setProducts] = useState<ProductItem[]>(fallbackProducts);
+  const [catalogCategories, setCatalogCategories] = useState<string[]>([]);
 
   useEffect(() => {
     let mounted = true;
@@ -58,6 +78,36 @@ function ProductCatalog({ selectedRegion, onGetQuote }: ProductCatalogProps) {
     };
   }, []);
 
+  useEffect(() => {
+    let mounted = true;
+    (async () => {
+      try {
+        const res = await fetch("/api/catalog-categories", { cache: "no-store" });
+        if (!res.ok) return;
+        const data = (await res.json()) as string[];
+        if (mounted && Array.isArray(data) && data.length > 0) {
+          setCatalogCategories(data);
+        }
+      } catch {
+        // Fall back to options derived from products only.
+      }
+    })();
+    return () => {
+      mounted = false;
+    };
+  }, []);
+
+  const filterOptions = useMemo(() => {
+    const extra = new Set<string>();
+    for (const p of products) {
+      if (p.category && !catalogCategories.includes(p.category)) {
+        extra.add(p.category);
+      }
+    }
+    const tail = Array.from(extra).sort((a, b) => a.localeCompare(b));
+    return ["All", ...catalogCategories, ...tail];
+  }, [catalogCategories, products]);
+
   const filtered = useMemo(() => {
     if (category === "All") return products;
     return products.filter((p) => (p.category || "").toLowerCase() === category.toLowerCase());
@@ -74,22 +124,24 @@ function ProductCatalog({ selectedRegion, onGetQuote }: ProductCatalogProps) {
             onChange={(e) => setCategory(e.target.value)}
             className="rounded-md border border-slate-300 px-3 py-2 text-sm"
           >
-            <option value="All">All Categories</option>
-            <option value="Chef">Chef</option>
-            <option value="Hotel">Hotel</option>
-            <option value="Restaurant">Restaurant</option>
-            <option value="Bar">Bar</option>
-            <option value="Catering">Catering</option>
+            {filterOptions.map((c) => (
+              <option key={c} value={c}>
+                {c === "All" ? "All Categories" : c}
+              </option>
+            ))}
           </select>
         </div>
       </div>
       <div className="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
         {filtered.map((product) => (
-          <article key={product.sku} className="rounded-xl border border-slate-200 bg-white p-4">
+          <article
+            key={product.id ?? product.sku}
+            className="rounded-xl border border-slate-200 bg-white p-4"
+          >
             <div className="relative aspect-video overflow-hidden rounded-lg bg-slate-100">
               {product.image_url ? (
                 <Image
-                  src={product.image_url}
+                  src={storefrontCatalogImageSrc(product.image_url) ?? product.image_url}
                   alt={product.name}
                   fill
                   sizes="(max-width: 768px) 100vw, 33vw"
