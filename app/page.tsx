@@ -2,11 +2,14 @@
 
 import Image from "next/image";
 import { useEffect, useMemo, useState } from "react";
+import CatalogueShowcase from "./components/CatalogueShowcase";
 import PopupForm from "./components/PopupForm";
 
 type ProductCatalogProps = {
   selectedRegion: string;
   onGetQuote: () => void;
+  categoryFilter: string;
+  onCategoryFilterChange: (value: string) => void;
 };
 
 const regions = [
@@ -54,8 +57,12 @@ function storefrontCatalogImageSrc(imageUrl: string | null | undefined): string 
   return `/api/catalog-media/${key.split("/").map(encodeURIComponent).join("/")}`;
 }
 
-function ProductCatalog({ selectedRegion, onGetQuote }: ProductCatalogProps) {
-  const [category, setCategory] = useState("All");
+function ProductCatalog({
+  selectedRegion,
+  onGetQuote,
+  categoryFilter,
+  onCategoryFilterChange,
+}: ProductCatalogProps) {
   const [products, setProducts] = useState<ProductItem[]>(fallbackProducts);
   const [catalogCategories, setCatalogCategories] = useState<string[]>([]);
 
@@ -109,9 +116,11 @@ function ProductCatalog({ selectedRegion, onGetQuote }: ProductCatalogProps) {
   }, [catalogCategories, products]);
 
   const filtered = useMemo(() => {
-    if (category === "All") return products;
-    return products.filter((p) => (p.category || "").toLowerCase() === category.toLowerCase());
-  }, [category, products]);
+    if (categoryFilter === "All") return products;
+    return products.filter(
+      (p) => (p.category || "").toLowerCase() === categoryFilter.toLowerCase(),
+    );
+  }, [categoryFilter, products]);
 
   return (
     <section className="mx-auto mt-16 max-w-6xl px-6">
@@ -120,8 +129,8 @@ function ProductCatalog({ selectedRegion, onGetQuote }: ProductCatalogProps) {
         <div className="flex items-center gap-3">
           <span className="text-sm text-slate-500">Region: {selectedRegion}</span>
           <select
-            value={category}
-            onChange={(e) => setCategory(e.target.value)}
+            value={categoryFilter}
+            onChange={(e) => onCategoryFilterChange(e.target.value)}
             className="rounded-md border border-slate-300 px-3 py-2 text-sm"
           >
             {filterOptions.map((c) => (
@@ -169,6 +178,7 @@ function ProductCatalog({ selectedRegion, onGetQuote }: ProductCatalogProps) {
 export default function Home() {
   const [selectedRegion, setSelectedRegion] = useState("All Regions");
   const [showPopup, setShowPopup] = useState(false);
+  const [catalogCategory, setCatalogCategory] = useState("All");
 
   return (
     <main className="min-h-screen bg-slate-50 text-slate-900">
@@ -236,8 +246,22 @@ export default function Home() {
         </div>
       </section>
 
+      <div className="bg-slate-950">
+        <CatalogueShowcase
+          onViewCollection={(name) => {
+            setCatalogCategory(name);
+            document.getElementById("catalog")?.scrollIntoView({ behavior: "smooth" });
+          }}
+        />
+      </div>
+
       <div id="catalog">
-        <ProductCatalog selectedRegion={selectedRegion} onGetQuote={() => setShowPopup(true)} />
+        <ProductCatalog
+          selectedRegion={selectedRegion}
+          onGetQuote={() => setShowPopup(true)}
+          categoryFilter={catalogCategory}
+          onCategoryFilterChange={setCatalogCategory}
+        />
       </div>
 
       <section id="benefits" className="mx-auto mt-16 grid max-w-6xl gap-4 px-6 sm:grid-cols-3">
