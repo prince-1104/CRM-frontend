@@ -263,7 +263,7 @@ export default function PopupForm({ isOpen, onClose }: PopupFormProps) {
                     name="phone"
                     autoComplete="tel"
                     inputMode="tel"
-                    placeholder="987456321"
+                    placeholder="9874563216"
                     value={phone}
                     onChange={(e) => handlePhoneChange(e.target.value)}
                     className={`w-full min-h-[48px] rounded-lg border border-slate-300 bg-white py-3 pl-12 pr-3 text-base text-slate-900 placeholder:text-slate-500 shadow-none outline-none transition focus:border-blue-500 focus:ring-2 focus:ring-blue-200 [&:-webkit-autofill]:[-webkit-text-fill-color:#0f172a] [&:-webkit-autofill]:shadow-[inset_0_0_0_1000px_rgb(255,255,255)] ${
