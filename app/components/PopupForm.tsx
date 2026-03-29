@@ -1,16 +1,35 @@
 "use client";
 
 import { useCallback, useEffect, useId, useRef, useState } from "react";
+import { createPortal } from "react-dom";
 
-/** Auto-popup does not open if user has scrolled past this many pixels from the top */
-const SCROLL_THRESHOLD_PX = 400;
+/** Set after a successful lead submit — blocks timed auto-opens (15s / 30s). */
+export const LEAD_POPUP_AUTO_BLOCK_KEY = "starUniform_leadCapture_autoBlock_v2";
+const LEGACY_LEAD_POPUP_DISMISSED_KEY = "popupDismissed";
+const V1_DISMISSED_KEY = "starUniform_leadCapture_v1_dismissed";
 
-const STORAGE_KEY = "popupDismissed";
+/** Skip timed auto-opens if this browser already captured a lead (v2 key). */
+export function shouldSkipLeadAutoOpen(): boolean {
+  try {
+    return window.localStorage.getItem(LEAD_POPUP_AUTO_BLOCK_KEY) === "true";
+  } catch {
+    return false;
+  }
+}
+
+function persistLeadCaptureSuccess() {
+  try {
+    localStorage.setItem(LEAD_POPUP_AUTO_BLOCK_KEY, "true");
+    localStorage.setItem(V1_DISMISSED_KEY, "true");
+    localStorage.setItem(LEGACY_LEAD_POPUP_DISMISSED_KEY, "true");
+  } catch {
+    /* ignore */
+  }
+}
 
 type PopupFormProps = {
   isOpen: boolean;
   onClose: () => void;
-  onRequestOpen: () => void;
 };
 
 function validateName(value: string): string | null {
@@ -26,14 +45,14 @@ function validatePhone(value: string): string | null {
   if (v.length === 0) return "Phone number is required";
   if (/^\d{10}$/.test(v)) return null;
   if (/^\+91-\d{10}$/.test(v)) return null;
-  return "Invalid phone format (use +91-XXXXXXXXXX or 10 digits)";
+  return "Enter a valid 10-digit number";
 }
 
 function isFormValid(name: string, phone: string): boolean {
   return validateName(name) === null && validatePhone(phone) === null;
 }
 
-export default function PopupForm({ isOpen, onClose, onRequestOpen }: PopupFormProps) {
+export default function PopupForm({ isOpen, onClose }: PopupFormProps) {
   const nameId = useId();
   const phoneId = useId();
   const [name, setName] = useState("");
@@ -47,43 +66,10 @@ export default function PopupForm({ isOpen, onClose, onRequestOpen }: PopupFormP
   const [phoneTouched, setPhoneTouched] = useState(false);
   const [entered, setEntered] = useState(false);
   const closeTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
-  const scrollPastRef = useRef(false);
 
-  const dismissAndRemember = useCallback(() => {
-    try {
-      localStorage.setItem(STORAGE_KEY, "true");
-    } catch {
-      /* ignore */
-    }
+  const handleDismiss = useCallback(() => {
     onClose();
   }, [onClose]);
-
-  useEffect(() => {
-    const onScroll = () => {
-      if (typeof window !== "undefined" && window.scrollY > SCROLL_THRESHOLD_PX) {
-        scrollPastRef.current = true;
-      }
-    };
-    window.addEventListener("scroll", onScroll, { passive: true });
-    onScroll();
-    return () => window.removeEventListener("scroll", onScroll);
-  }, []);
-
-  useEffect(() => {
-    const delayMs = 15000 + Math.random() * 5000;
-    const id = window.setTimeout(() => {
-      try {
-        if (localStorage.getItem(STORAGE_KEY) === "true") return;
-      } catch {
-        /* ignore */
-      }
-      if (typeof window !== "undefined") {
-        if (window.scrollY > SCROLL_THRESHOLD_PX || scrollPastRef.current) return;
-      }
-      onRequestOpen();
-    }, delayMs);
-    return () => window.clearTimeout(id);
-  }, [onRequestOpen]);
 
   useEffect(() => {
     if (isOpen) {
@@ -167,11 +153,7 @@ export default function PopupForm({ isOpen, onClose, onRequestOpen }: PopupFormP
         return;
       }
       setSuccess(true);
-      try {
-        localStorage.setItem(STORAGE_KEY, "true");
-      } catch {
-        /* ignore */
-      }
+      persistLeadCaptureSuccess();
       setName("");
       setPhone("");
       setNameError(null);
@@ -192,18 +174,18 @@ export default function PopupForm({ isOpen, onClose, onRequestOpen }: PopupFormP
   const showNameErr = nameTouched && nameError !== null;
   const showPhoneErr = phoneTouched && phoneError !== null;
 
-  return (
+  const overlay = (
     <div
-      className={`fixed inset-0 z-[100] flex items-end justify-center bg-black/50 p-0 transition-opacity duration-300 ease-out max-[479px]:items-stretch max-[479px]:p-0 sm:items-center sm:p-4 ${
+      className={`fixed inset-0 z-[9999] flex items-end justify-center bg-black/50 p-0 transition-opacity duration-300 ease-out max-[479px]:items-stretch max-[479px]:p-0 sm:items-center sm:p-4 ${
         entered ? "opacity-100" : "opacity-0"
       }`}
       role="presentation"
       onClick={(e) => {
-        if (e.target === e.currentTarget) dismissAndRemember();
+        if (e.target === e.currentTarget) handleDismiss();
       }}
     >
       <div
-        className={`flex max-h-[100dvh] w-full max-w-[450px] flex-col overflow-hidden rounded-t-2xl bg-white shadow-xl transition-all duration-[400ms] ease-out max-[479px]:mx-auto max-[479px]:h-full max-[479px]:max-h-none max-[479px]:min-h-0 max-[479px]:max-w-none max-[479px]:flex-1 max-[479px]:rounded-none sm:max-h-[min(90dvh,800px)] sm:rounded-2xl ${
+        className={`flex max-h-[100dvh] w-full max-w-[450px] flex-col overflow-hidden rounded-t-2xl bg-white pb-[env(safe-area-inset-bottom,0px)] text-slate-900 shadow-xl [color-scheme:light] transition-all duration-[400ms] ease-out max-[479px]:mx-auto max-[479px]:h-full max-[479px]:max-h-none max-[479px]:min-h-0 max-[479px]:max-w-none max-[479px]:flex-1 max-[479px]:rounded-none sm:max-h-[min(90dvh,800px)] sm:rounded-2xl sm:pb-0 ${
           entered
             ? "translate-y-0 opacity-100"
             : "translate-y-full opacity-0 sm:translate-y-8"
@@ -219,7 +201,7 @@ export default function PopupForm({ isOpen, onClose, onRequestOpen }: PopupFormP
           </h2>
           <button
             type="button"
-            onClick={dismissAndRemember}
+            onClick={handleDismiss}
             className="absolute right-3 top-1/2 flex h-12 min-h-[48px] w-12 min-w-[48px] -translate-y-1/2 items-center justify-center rounded-lg text-2xl leading-none text-white transition hover:bg-white/10 focus:outline-none focus:ring-2 focus:ring-white/80"
             aria-label="Close"
           >
@@ -249,8 +231,8 @@ export default function PopupForm({ isOpen, onClose, onRequestOpen }: PopupFormP
                   value={name}
                   onChange={(e) => handleNameChange(e.target.value)}
                   maxLength={100}
-                  className={`w-full min-h-[48px] rounded-lg border px-3 py-3 text-base text-slate-900 outline-none transition focus:border-blue-500 focus:ring-2 focus:ring-blue-200 ${
-                    showNameErr ? "border-red-500" : "border-slate-300"
+                  className={`w-full min-h-[48px] rounded-lg border border-slate-300 bg-white px-3 py-3 text-base text-slate-900 placeholder:text-slate-500 shadow-none outline-none transition focus:border-blue-500 focus:ring-2 focus:ring-blue-200 [&:-webkit-autofill]:[-webkit-text-fill-color:#0f172a] [&:-webkit-autofill]:shadow-[inset_0_0_0_1000px_rgb(255,255,255)] ${
+                    showNameErr ? "border-red-500" : ""
                   }`}
                 />
                 {showNameErr && <p className="mt-1 text-sm text-red-600">{nameError}</p>}
@@ -283,11 +265,11 @@ export default function PopupForm({ isOpen, onClose, onRequestOpen }: PopupFormP
                     name="phone"
                     autoComplete="tel"
                     inputMode="tel"
-                    placeholder="+91-9876543210"
+                    placeholder="9845******"
                     value={phone}
                     onChange={(e) => handlePhoneChange(e.target.value)}
-                    className={`w-full min-h-[48px] rounded-lg border py-3 pl-12 pr-3 text-base text-slate-900 outline-none transition focus:border-blue-500 focus:ring-2 focus:ring-blue-200 ${
-                      showPhoneErr ? "border-red-500" : "border-slate-300"
+                    className={`w-full min-h-[48px] rounded-lg border border-slate-300 bg-white py-3 pl-12 pr-3 text-base text-slate-900 placeholder:text-slate-500 shadow-none outline-none transition focus:border-blue-500 focus:ring-2 focus:ring-blue-200 [&:-webkit-autofill]:[-webkit-text-fill-color:#0f172a] [&:-webkit-autofill]:shadow-[inset_0_0_0_1000px_rgb(255,255,255)] ${
+                      showPhoneErr ? "border-red-500" : ""
                     }`}
                   />
                 </div>
@@ -338,12 +320,12 @@ export default function PopupForm({ isOpen, onClose, onRequestOpen }: PopupFormP
               </button>
               <button
                 type="button"
-                onClick={dismissAndRemember}
+                onClick={handleDismiss}
                 className="w-full min-h-[48px] rounded-lg border border-slate-200 bg-slate-100 px-4 py-3 text-base font-medium text-slate-700 transition hover:bg-slate-200 focus:outline-none focus:ring-2 focus:ring-slate-300"
               >
                 Maybe Later
               </button>
-              <p className="text-center text-xs text-slate-500">
+              <p className="text-center text-xs font-medium text-slate-600">
                 We&apos;ll call you shortly to discuss your requirements
               </p>
             </div>
@@ -352,4 +334,7 @@ export default function PopupForm({ isOpen, onClose, onRequestOpen }: PopupFormP
       </div>
     </div>
   );
+
+  if (typeof document === "undefined" || !document.body) return null;
+  return createPortal(overlay, document.body);
 }

@@ -1,12 +1,30 @@
-import type { Metadata } from "next";
-import { Inter } from "next/font/google";
+import type { Metadata, Viewport } from "next";
+import { Manrope, Space_Grotesk } from "next/font/google";
 import "./globals.css";
 
-const inter = Inter({ subsets: ["latin"] });
+const spaceGrotesk = Space_Grotesk({
+  subsets: ["latin"],
+  variable: "--font-headline",
+  display: "swap",
+});
+
+const manrope = Manrope({
+  subsets: ["latin"],
+  variable: "--font-body",
+  display: "swap",
+});
 
 export const metadata: Metadata = {
-  title: "Star Uniform | Lead Generation Platform",
-  description: "Public landing page for Star Uniform lead capture.",
+  title: "Star Uniform | Premium Professional Attire",
+  description:
+    "Premium uniforms for chef, hotel, restaurant, bar, and catering — crafted for your brand.",
+};
+
+/** Enables env(safe-area-inset-*) for notched phones and home-indicator spacing */
+export const viewport: Viewport = {
+  width: "device-width",
+  initialScale: 1,
+  viewportFit: "cover",
 };
 
 export default function RootLayout({
@@ -15,8 +33,12 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
-      <body className={inter.className}>{children}</body>
+    <html lang="en" className="dark">
+      <body
+        className={`${spaceGrotesk.variable} ${manrope.variable} bg-surface font-body text-on-surface antialiased selection:bg-primary selection:text-on-primary`}
+      >
+        {children}
+      </body>
     </html>
   );
 }

@@ -8,6 +8,14 @@
   html {
     scroll-behavior: smooth;
     color-scheme: dark;
+    /* Fixed nav + notch — anchor links land below header on mobile */
+    scroll-padding-top: calc(5.25rem + env(safe-area-inset-top, 0px));
+  }
+
+  body {
+    -webkit-tap-highlight-color: rgba(161, 250, 255, 0.12);
+    padding-left: env(safe-area-inset-left, 0px);
+    padding-right: env(safe-area-inset-right, 0px);
   }
 
   /* Native <select> / <option> stay readable on Windows dark theme */
@@ -54,5 +62,80 @@
 @layer utilities {
   .text-balance {
     text-wrap: balance;
+  }
+
+  /** Header WhatsApp CTA — soft 3D + looping pop */
+  .wa-header-btn {
+    transform-style: preserve-3d;
+    perspective: 120px;
+    filter: drop-shadow(0 4px 6px rgb(0 0 0 / 0.35)) drop-shadow(0 0 14px rgb(37 211 102 / 0.45));
+    animation: wa-pop 2.2s ease-in-out infinite;
+  }
+
+  .wa-header-btn:hover {
+    filter: drop-shadow(0 6px 10px rgb(0 0 0 / 0.4)) drop-shadow(0 0 20px rgb(37 211 102 / 0.55));
+  }
+
+  /** Header Contact — cyan glow + gentle pulse (pairs with WhatsApp) */
+  .contact-header-btn {
+    transform-style: preserve-3d;
+    filter: drop-shadow(0 4px 6px rgb(0 0 0 / 0.35)) drop-shadow(0 0 16px rgb(34 211 238 / 0.5));
+    animation: contact-pop 2.8s ease-in-out infinite;
+  }
+
+  .contact-header-btn:hover {
+    filter: drop-shadow(0 6px 10px rgb(0 0 0 / 0.4)) drop-shadow(0 0 24px rgb(56 189 248 / 0.6));
+  }
+
+  /** Header phone — glow + pop, tap opens tel: */
+  .header-phone-glow {
+    transform-style: preserve-3d;
+    filter: drop-shadow(0 2px 4px rgb(0 0 0 / 0.45)) drop-shadow(0 0 10px rgb(217 70 239 / 0.55))
+      drop-shadow(0 0 20px rgb(168 85 247 / 0.35));
+    animation: header-phone-pop 2.3s ease-in-out infinite;
+  }
+
+  .header-phone-glow:hover {
+    filter: drop-shadow(0 3px 6px rgb(0 0 0 / 0.5)) drop-shadow(0 0 14px rgb(232 121 249 / 0.75))
+      drop-shadow(0 0 28px rgb(192 132 252 / 0.45));
+  }
+}
+
+@keyframes contact-pop {
+  0%,
+  100% {
+    transform: translateZ(0) scale(1);
+  }
+  45% {
+    transform: translateZ(0) scale(1.06);
+  }
+  60% {
+    transform: translateZ(0) scale(1.03);
+  }
+}
+
+@keyframes header-phone-pop {
+  0%,
+  100% {
+    transform: translateZ(0) scale(1);
+  }
+  40% {
+    transform: translateZ(0) scale(1.08);
+  }
+  55% {
+    transform: translateZ(0) scale(1.04);
+  }
+}
+
+@keyframes wa-pop {
+  0%,
+  100% {
+    transform: translateZ(0) scale(1) rotateX(0deg);
+  }
+  40% {
+    transform: translateZ(12px) scale(1.08) rotateX(4deg);
+  }
+  55% {
+    transform: translateZ(8px) scale(1.05) rotateX(2deg);
   }
 }

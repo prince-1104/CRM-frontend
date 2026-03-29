@@ -1,6 +1,6 @@
 import { storefrontCatalogImageSrc } from "./catalogMedia";
 
-/** 2×2 branded grid in `public/images/` — quadrants: tl chef, tr hotel, bl catering (incl. former bar). */
+/** 2×2 branded grid in `public/images/` — quadrants: tl F&B, tr hotel, bl catering (incl. chef & bar). */
 export const BRANDED_CATALOGUE_GRID_PATH = "/images/star-uniform-catalogues-grid.png";
 
 const DEFAULT_CATALOG_URL =
@@ -15,10 +15,6 @@ type IndustryRule = { test: RegExp; url: string };
 /** Lifestyle stock when category does not map to the branded 2×2 grid. */
 const INDUSTRY_RULES: IndustryRule[] = [
   {
-    test: /chef|culinary|kitchen|cook|baker|pastry|wear/i,
-    url: "https://images.unsplash.com/photo-1577219491135-ce391730fb2c?auto=format&fit=crop&w=1400&q=82",
-  },
-  {
     test: /hotel|lodging|hospitality|resort|front\s*desk|reception|concierge|lobby/i,
     url: "https://images.unsplash.com/photo-1542314831-068cd1db693b?auto=format&fit=crop&w=1400&q=82",
   },
@@ -27,7 +23,7 @@ const INDUSTRY_RULES: IndustryRule[] = [
     url: "https://images.unsplash.com/photo-1414235077428-338989a2e8c0?auto=format&fit=crop&w=1400&q=82",
   },
   {
-    test: /cater|event\s*staff|banquet|gala|corporate\s*event|catering|\bbar\b|lounge|mixolog|bartend|pub\b/i,
+    test: /cater|event\s*staff|banquet|gala|corporate\s*event|catering|\bbar\b|lounge|mixolog|bartend|pub\b|chef|culinary|kitchen|cook|baker|pastry|wear/i,
     url: "https://images.unsplash.com/photo-1511578314322-379afb476865?auto=format&fit=crop&w=1400&q=82",
   },
   {
@@ -45,12 +41,11 @@ const INDUSTRY_RULES: IndustryRule[] = [
 ];
 
 /**
- * Branded grid quadrants (user asset): TL chef wear, TR hotel management,
- * BL catering (bar & lounge rolled into catering).
+ * Branded grid quadrants: TL restaurant / dining, TR hotel, BL catering (chef, bar & lounge).
  */
 const BRANDED_QUADRANT_RULES: { test: RegExp; quadrant: "tl" | "tr" | "bl" | "br" }[] = [
   {
-    test: /cater|banquet|catering|event\s*staff|\bbar\b|lounge|mixolog|bartend|pub\b/i,
+    test: /cater|banquet|catering|event\s*staff|\bbar\b|lounge|mixolog|bartend|pub\b|chef|wear|culinary|kitchen|cook|pastry/i,
     quadrant: "bl",
   },
   {
@@ -58,7 +53,7 @@ const BRANDED_QUADRANT_RULES: { test: RegExp; quadrant: "tl" | "tr" | "bl" | "br
     quadrant: "tr",
   },
   {
-    test: /chef|wear|culinary|kitchen|cook|pastry|restaurant|dining|waiter|waitress|f&b|f\s*&\s*b/i,
+    test: /restaurant|dining|waiter|waitress|f&b|f\s*&\s*b/i,
     quadrant: "tl",
   },
 ];
@@ -94,7 +89,7 @@ export function resolveCatalogVisual(
   return { type: "full", src: industryStockImageForCategory(categoryName) };
 }
 
-/** Hero: admin cover, else chef quadrant of branded grid, else Unsplash. */
+/** Hero: admin cover, else catering quadrant of branded grid, else Unsplash. */
 export function heroDisplayVisual(
   firstCatalogueCoverUrl: string | null | undefined,
 ): CatalogVisual {
@@ -103,7 +98,7 @@ export function heroDisplayVisual(
   return {
     type: "grid-quadrant",
     src: BRANDED_CATALOGUE_GRID_PATH,
-    quadrant: "tl",
+    quadrant: "bl",
   };
 }
 
