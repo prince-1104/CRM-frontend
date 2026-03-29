@@ -176,7 +176,7 @@ export default function PopupForm({ isOpen, onClose }: PopupFormProps) {
 
   const overlay = (
     <div
-      className={`fixed inset-0 z-[9999] flex items-end justify-center bg-black/50 p-0 transition-opacity duration-300 ease-out max-[479px]:items-stretch max-[479px]:p-0 sm:items-center sm:p-4 ${
+      className={`fixed inset-0 z-[9999] flex items-center justify-center bg-black/50 p-4 transition-opacity duration-300 ease-out ${
         entered ? "opacity-100" : "opacity-0"
       }`}
       role="presentation"
@@ -185,10 +185,8 @@ export default function PopupForm({ isOpen, onClose }: PopupFormProps) {
       }}
     >
       <div
-        className={`flex max-h-[100dvh] w-full max-w-[450px] flex-col overflow-hidden rounded-t-2xl bg-white pb-[env(safe-area-inset-bottom,0px)] text-slate-900 shadow-xl [color-scheme:light] transition-all duration-[400ms] ease-out max-[479px]:mx-auto max-[479px]:h-full max-[479px]:max-h-none max-[479px]:min-h-0 max-[479px]:max-w-none max-[479px]:flex-1 max-[479px]:rounded-none sm:max-h-[min(90dvh,800px)] sm:rounded-2xl sm:pb-0 ${
-          entered
-            ? "translate-y-0 opacity-100"
-            : "translate-y-full opacity-0 sm:translate-y-8"
+        className={`flex w-full max-w-[450px] max-h-[min(90dvh,800px)] flex-col overflow-hidden rounded-2xl bg-white pb-[env(safe-area-inset-bottom,0px)] text-slate-900 shadow-xl [color-scheme:light] transition-all duration-[400ms] ease-out ${
+          entered ? "translate-y-0 opacity-100" : "translate-y-8 opacity-0"
         }`}
         role="dialog"
         aria-modal="true"
@@ -265,7 +263,7 @@ export default function PopupForm({ isOpen, onClose }: PopupFormProps) {
                     name="phone"
                     autoComplete="tel"
                     inputMode="tel"
-                    placeholder="9845******"
+                    placeholder="987456321"
                     value={phone}
                     onChange={(e) => handlePhoneChange(e.target.value)}
                     className={`w-full min-h-[48px] rounded-lg border border-slate-300 bg-white py-3 pl-12 pr-3 text-base text-slate-900 placeholder:text-slate-500 shadow-none outline-none transition focus:border-blue-500 focus:ring-2 focus:ring-blue-200 [&:-webkit-autofill]:[-webkit-text-fill-color:#0f172a] [&:-webkit-autofill]:shadow-[inset_0_0_0_1000px_rgb(255,255,255)] ${
