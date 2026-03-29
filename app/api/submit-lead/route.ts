@@ -1,3 +1,4 @@
+import { getPublicApiBaseUrl } from "@/lib/apiBaseUrl";
 import { NextResponse } from "next/server";
 
 type LeadPayload = {
@@ -30,7 +31,7 @@ export async function POST(request: Request) {
       );
     }
 
-    const apiUrl = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:8000";
+    const apiUrl = getPublicApiBaseUrl();
     let response: Response;
     try {
       response = await fetch(`${apiUrl}/api/public/submit-lead`, {

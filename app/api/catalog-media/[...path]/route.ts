@@ -1,3 +1,4 @@
+import { getPublicApiBaseUrl } from "@/lib/apiBaseUrl";
 import { NextResponse } from "next/server";
 
 type RouteCtx = { params: { path: string[] } };
@@ -12,7 +13,7 @@ export async function GET(_request: Request, ctx: RouteCtx) {
     return new NextResponse(null, { status: 404 });
   }
 
-  const apiUrl = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:8000";
+  const apiUrl = getPublicApiBaseUrl();
   const subpath = segments.map(encodeURIComponent).join("/");
 
   try {

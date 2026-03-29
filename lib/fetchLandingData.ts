@@ -1,3 +1,4 @@
+import { getPublicApiBaseUrl } from "./apiBaseUrl";
 import type { LandingCatalogueCard } from "./landingTypes";
 
 export type LandingProductItem = {
@@ -26,7 +27,7 @@ const emptyStorefront: LandingStorefrontInfo = {
 };
 
 function apiBase(): string {
-  return process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:8000";
+  return getPublicApiBaseUrl();
 }
 
 async function fetchJson<T>(url: string): Promise<T> {
