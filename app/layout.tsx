@@ -29,9 +29,9 @@ export const viewport: Viewport = {
   viewportFit: "cover",
 };
 
-// Google Ads tag ID (from your screenshot: AW-1404975853).
+// Google Ads tag ID (from your Google Ads diagnostics screenshot).
 // If your Google Ads console shows a different ID, update it here.
-const GOOGLE_TAG_ID = "AW-1404975853";
+const GOOGLE_TAG_ID = "AW-1804975853";
 
 export default function RootLayout({
   children,
