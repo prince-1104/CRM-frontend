@@ -2,14 +2,17 @@
 const nextConfig = {
   images: {
     /**
-     * Disable Vercel Image Optimization to stay within the Hobby-plan
-     * limit of 5 000 transformations / month.
+     * Re-enabled Vercel Image Optimization.
      *
-     * All product / catalogue images are already served from Cloudflare R2
-     * (with its own CDN caching) or from Unsplash's own optimized URLs,
-     * so the extra Vercel transformation step was redundant.
+     * Product / catalogue images from R2 are already WebP but still
+     * benefit from automatic resizing (srcSet) and quality tuning that
+     * the Next.js <Image> component provides.  Without this, the
+     * browser downloads the full-resolution original on every device.
      */
-    unoptimized: true,
+    formats: ["image/avif", "image/webp"],
+    deviceSizes: [640, 750, 828, 1080, 1200],
+    imageSizes: [16, 32, 48, 64, 96, 128, 256, 384],
+    minimumCacheTTL: 86400,
     remotePatterns: [
       { protocol: "https", hostname: "*.r2.dev" },
       { protocol: "https", hostname: "*.r2.cloudflarestorage.com" },

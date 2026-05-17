@@ -19,7 +19,7 @@ export async function GET(_request: Request, ctx: RouteCtx) {
   try {
     const response = await fetch(
       `${apiUrl}/api/public/catalog/media/${subpath}`,
-      { method: "GET", cache: "no-store" },
+      { method: "GET", next: { revalidate: 3600 } },
     );
 
     if (!response.ok) {
@@ -29,7 +29,8 @@ export async function GET(_request: Request, ctx: RouteCtx) {
     const headers = new Headers();
     const ct = response.headers.get("content-type");
     if (ct) headers.set("content-type", ct);
-    headers.set("cache-control", "public, max-age=600");
+    // Cache images aggressively — they rarely change
+    headers.set("cache-control", "public, max-age=31536000, s-maxage=86400, stale-while-revalidate=604800");
 
     return new NextResponse(response.body, { status: 200, headers });
   } catch {

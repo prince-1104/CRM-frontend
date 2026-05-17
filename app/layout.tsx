@@ -40,6 +40,17 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" className="dark">
+      <head>
+        {/* Preconnect to Google Fonts and R2 CDN for faster resource loading */}
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
+        <link rel="dns-prefetch" href="https://pub-e2e706ed2ae544689d07df5df488ae62.r2.dev" />
+        {/* Material Symbols — loaded as stylesheet (non-render-blocking via font-display=swap) */}
+        <link
+          rel="stylesheet"
+          href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&display=swap"
+        />
+      </head>
       <body
         className={`${spaceGrotesk.variable} ${manrope.variable} bg-surface font-body text-on-surface antialiased selection:bg-primary selection:text-on-primary`}
       >
@@ -49,9 +60,9 @@ export default function RootLayout({
         <Script
           async
           src={`https://www.googletagmanager.com/gtag/js?id=${GOOGLE_TAG_ID}`}
-          strategy="beforeInteractive"
+          strategy="afterInteractive"
         />
-        <Script id="google-ads-gtag" strategy="beforeInteractive">
+        <Script id="google-ads-gtag" strategy="afterInteractive">
           {`
             window.dataLayer = window.dataLayer || [];
             function gtag(){dataLayer.push(arguments);}

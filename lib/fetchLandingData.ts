@@ -31,7 +31,7 @@ function apiBase(): string {
 }
 
 async function fetchJson<T>(url: string): Promise<T> {
-  const res = await fetch(url, { cache: "no-store" });
+  const res = await fetch(url, { next: { revalidate: 60 } });
   if (!res.ok) throw new Error(String(res.status));
   return (await res.json()) as T;
 }
