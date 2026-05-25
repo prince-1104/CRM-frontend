@@ -590,8 +590,21 @@ export default function HomeClient({
           <div className="text-lg font-black text-primary font-headline uppercase tracking-tighter">
             {brandName}
           </div>
-          <div className="text-on-surface-variant font-label text-xs uppercase tracking-widest text-center md:text-right">
-            © {new Date().getFullYear()} {brandName}. Premium professional attire.
+          <div className="flex flex-col items-center gap-3 md:flex-row md:gap-6">
+            <a
+              href="https://feedback.doptonin.online/u/Star_Uniform"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-2 rounded-full border border-outline-variant/40 bg-surface-container px-5 py-2.5 text-sm font-semibold text-on-surface transition-all hover:border-secondary hover:bg-surface-container-high hover:shadow-[0_0_16px_rgba(161,250,255,0.2)]"
+            >
+              <span className="material-symbols-outlined text-[18px] text-secondary">
+                rate_review
+              </span>
+              Send Feedback
+            </a>
+            <div className="text-on-surface-variant font-label text-xs uppercase tracking-widest text-center md:text-right">
+              © {new Date().getFullYear()} {brandName}. Premium professional attire.
+            </div>
           </div>
         </div>
       </footer>
