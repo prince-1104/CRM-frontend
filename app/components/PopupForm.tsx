@@ -5,15 +5,37 @@ import { createPortal } from "react-dom";
 
 /** Set after a successful lead submit — blocks timed auto-opens (15s / 30s). */
 export const LEAD_POPUP_AUTO_BLOCK_KEY = "starUniform_leadCapture_autoBlock_v2";
+/** Session-only — user closed the popup without submitting. */
+export const LEAD_POPUP_SESSION_DISMISSED_KEY =
+  "starUniform_leadPopup_dismissed_session";
 const LEGACY_LEAD_POPUP_DISMISSED_KEY = "popupDismissed";
 const V1_DISMISSED_KEY = "starUniform_leadCapture_v1_dismissed";
+
+/** Auto-popup waits this long after landing (ms). */
+export const LEAD_POPUP_DELAY_MS_FIRST = 5000;
+/** Second chance if the visitor did not dismiss or submit. */
+export const LEAD_POPUP_DELAY_MS_SECOND = 25000;
 
 /** Skip timed auto-opens if this browser already captured a lead (v2 key). */
 export function shouldSkipLeadAutoOpen(): boolean {
   try {
-    return window.localStorage.getItem(LEAD_POPUP_AUTO_BLOCK_KEY) === "true";
+    if (window.localStorage.getItem(LEAD_POPUP_AUTO_BLOCK_KEY) === "true") {
+      return true;
+    }
+    if (window.sessionStorage.getItem(LEAD_POPUP_SESSION_DISMISSED_KEY) === "true") {
+      return true;
+    }
   } catch {
     return false;
+  }
+  return false;
+}
+
+export function markLeadPopupDismissedForSession() {
+  try {
+    window.sessionStorage.setItem(LEAD_POPUP_SESSION_DISMISSED_KEY, "true");
+  } catch {
+    /* ignore */
   }
 }
 
@@ -22,6 +44,7 @@ function persistLeadCaptureSuccess() {
     localStorage.setItem(LEAD_POPUP_AUTO_BLOCK_KEY, "true");
     localStorage.setItem(V1_DISMISSED_KEY, "true");
     localStorage.setItem(LEGACY_LEAD_POPUP_DISMISSED_KEY, "true");
+    sessionStorage.setItem(LEAD_POPUP_SESSION_DISMISSED_KEY, "true");
   } catch {
     /* ignore */
   }
@@ -68,6 +91,7 @@ export default function PopupForm({ isOpen, onClose }: PopupFormProps) {
   const closeTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   const handleDismiss = useCallback(() => {
+    markLeadPopupDismissedForSession();
     onClose();
   }, [onClose]);
 

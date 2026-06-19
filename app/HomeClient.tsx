@@ -1,8 +1,13 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import LandingCatalogBento from "./components/LandingCatalogBento";
-import PopupForm, { shouldSkipLeadAutoOpen } from "./components/PopupForm";
+import PopupForm, {
+  LEAD_POPUP_DELAY_MS_FIRST,
+  LEAD_POPUP_DELAY_MS_SECOND,
+  markLeadPopupDismissedForSession,
+  shouldSkipLeadAutoOpen,
+} from "./components/PopupForm";
 import CatalogueCoverImage from "./components/CatalogueCoverImage";
 import ProductImageLightbox from "./components/ProductImageLightbox";
 import type { LandingData, LandingProductItem } from "../lib/fetchLandingData";
@@ -15,9 +20,6 @@ const fallbackProducts: LandingProductItem[] = [
 ];
 
 const DEFAULT_NAV = ["Hotel", "Restaurant", "Catering"];
-
-const LEAD_POPUP_DELAY_MS_FIRST = 15000;
-const LEAD_POPUP_DELAY_MS_SECOND = 30000;
 
 /** Header & footer — India +91 8100674659 */
 const HEADER_WHATSAPP_HREF = "https://wa.me/918100674659";
@@ -115,12 +117,19 @@ export default function HomeClient({
       if (shouldSkipLeadAutoOpen()) return;
       setShowPopup(true);
     };
+
     const id1 = window.setTimeout(openIfAllowed, LEAD_POPUP_DELAY_MS_FIRST);
     const id2 = window.setTimeout(openIfAllowed, LEAD_POPUP_DELAY_MS_SECOND);
+
     return () => {
       window.clearTimeout(id1);
       window.clearTimeout(id2);
     };
+  }, []);
+
+  const closeLeadPopup = useCallback(() => {
+    markLeadPopupDismissedForSession();
+    setShowPopup(false);
   }, []);
 
   const products = useMemo(
@@ -617,7 +626,7 @@ export default function HomeClient({
         />
       ) : null}
 
-      <PopupForm isOpen={showPopup} onClose={() => setShowPopup(false)} />
+      <PopupForm isOpen={showPopup} onClose={closeLeadPopup} />
     </>
   );
 }
