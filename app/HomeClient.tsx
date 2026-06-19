@@ -417,9 +417,12 @@ export default function HomeClient({
             </div>
             <div className="mt-8 grid gap-5 sm:mt-10 sm:grid-cols-2 sm:gap-6 lg:grid-cols-3">
               {filteredProducts.map((product) => {
+                const imageLabel = product.category
+                  ? `${product.category} — ${product.sku}`
+                  : product.sku;
                 const visual = resolveCatalogVisual(
                   product.image_url,
-                  product.category || product.name,
+                  product.category || product.sku,
                 );
                 return (
                   <article
@@ -429,15 +432,15 @@ export default function HomeClient({
                     <button
                       type="button"
                       onClick={() =>
-                        setImageLightbox({ src: visual.src, alt: product.name })
+                        setImageLightbox({ src: visual.src, alt: imageLabel })
                       }
                       className="group/img relative aspect-video w-full overflow-hidden rounded-lg bg-surface-container-highest p-0 text-left ring-offset-2 ring-offset-surface-container-low transition hover:ring-2 hover:ring-primary/50 focus:outline-none focus-visible:ring-2 focus-visible:ring-primary"
-                      aria-label={`View full image: ${product.name}`}
+                      aria-label={`View full image: ${imageLabel}`}
                       title="View full image"
                     >
                       <CatalogueCoverImage
                         visual={visual}
-                        alt={product.name}
+                        alt={imageLabel}
                         sizes="(max-width: 768px) 100vw, 33vw"
                         className="absolute inset-0 h-full w-full"
                       />
@@ -451,7 +454,6 @@ export default function HomeClient({
                       </span>
                     </button>
                     <p className="mt-3 text-xs text-on-surface-variant">{product.sku}</p>
-                    <h3 className="text-lg font-semibold text-on-surface">{product.name}</h3>
                     <p className="text-sm text-on-surface-variant">
                       {product.category || "General"}
                     </p>
