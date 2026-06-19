@@ -30,10 +30,11 @@ export default function ProductImageLightbox({
 
   return createPortal(
     <div
-      className="fixed inset-0 z-[10000] flex items-center justify-center bg-black/88 p-3 backdrop-blur-sm"
+      className="fixed inset-0 z-[10000] flex items-center justify-center bg-black/90 p-4 backdrop-blur-md"
       role="presentation"
       onClick={onClose}
     >
+      <div className="mesh-grid-3d pointer-events-none absolute inset-0 opacity-20" aria-hidden />
       <button
         type="button"
         onClick={onClose}
@@ -47,7 +48,7 @@ export default function ProductImageLightbox({
       <img
         src={src}
         alt={alt}
-        className="max-h-[min(92dvh,1080px)] max-w-[min(96vw,1400px)] object-contain shadow-2xl"
+        className="lightbox-frame-3d max-h-[min(92dvh,1080px)] max-w-[min(96vw,1400px)] rounded-lg object-contain"
         onClick={(e) => e.stopPropagation()}
       />
     </div>,

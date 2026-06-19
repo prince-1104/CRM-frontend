@@ -66,7 +66,7 @@ export default function LandingCatalogBento({
             type="button"
             aria-label={`View ${c.name} collection`}
             onClick={() => onViewCollection(c.name)}
-            className={`${gridSpanClass} group relative m-0 w-full touch-manipulation overflow-hidden rounded-xl border-none p-0 font-inherit glass-card ${glow} cursor-pointer text-left transition-all duration-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary active:brightness-[0.97]`}
+            className={`${gridSpanClass} bento-card-3d group relative m-0 w-full touch-manipulation overflow-hidden rounded-xl border-none p-0 font-inherit glass-card ${glow} cursor-pointer text-left transition-all duration-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary active:brightness-[0.97]`}
           >
             <div className={`absolute inset-0 z-0 ${imageOpacity} transition-opacity`}>
               <CatalogueCoverImage

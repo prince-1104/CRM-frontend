@@ -2,6 +2,8 @@
 
 import { useCallback, useEffect, useMemo, useState } from "react";
 import LandingCatalogBento from "./components/LandingCatalogBento";
+import AmbientScene from "./components/AmbientScene";
+import PremiumProductCard from "./components/PremiumProductCard";
 import PopupForm, {
   LEAD_POPUP_DELAY_MS_FIRST,
   LEAD_POPUP_DELAY_MS_SECOND,
@@ -265,8 +267,9 @@ export default function HomeClient({
         </div>
       </nav>
 
-      <main className="pt-20">
+      <main className="relative pt-20">
         <section className="relative flex min-h-[min(921px,100dvh)] items-center overflow-hidden px-6 md:px-8">
+          <AmbientScene variant="hero" />
           <div className="absolute inset-0 z-0 opacity-40">
             <CatalogueCoverImage
               visual={heroVisual}
@@ -281,7 +284,7 @@ export default function HomeClient({
             <span className="mb-3 block font-label text-[0.7rem] uppercase tracking-[0.25em] text-secondary drop-shadow-[0_1px_10px_rgba(0,0,0,0.9)] sm:mb-4 sm:text-[0.75rem] sm:tracking-[0.3em]">
               Uniform programs for hospitality & events
             </span>
-            <h1 className="mb-5 font-headline text-[clamp(1.65rem,6.5vw,2.75rem)] font-bold leading-[1.12] tracking-tight text-on-surface sm:mb-6 sm:text-4xl md:text-7xl lg:text-8xl">
+            <h1 className="hero-title-3d mb-5 font-headline text-[clamp(1.65rem,6.5vw,2.75rem)] font-bold leading-[1.12] tracking-tight text-on-surface sm:mb-6 sm:text-4xl md:text-7xl lg:text-8xl">
               Premium Uniforms <br />
               <span className="text-primary drop-shadow-[0_0_24px_rgba(0,0,0,0.75)]">
                 for your business
@@ -329,29 +332,30 @@ export default function HomeClient({
           </div>
         </section>
 
-        <section className="bg-surface-container-low px-4 py-16 sm:px-6 sm:py-20 md:px-8 md:py-24">
-          <div className="mx-auto grid max-w-7xl grid-cols-1 gap-10 md:grid-cols-3 md:gap-12">
-            <div className="flex flex-col items-center text-center group">
-              <span className="font-headline text-5xl sm:text-6xl font-bold text-primary mb-2 group-hover:scale-110 transition-transform">
+        <section className="relative bg-surface-container-low px-4 py-16 sm:px-6 sm:py-20 md:px-8 md:py-24">
+          <AmbientScene variant="default" />
+          <div className="relative mx-auto grid max-w-7xl grid-cols-1 gap-6 md:grid-cols-3 md:gap-8">
+            <div className="saas-stat-3d flex flex-col items-center rounded-2xl px-6 py-10 text-center">
+              <span className="font-headline text-5xl font-bold text-primary sm:text-6xl">
                 200+
               </span>
-              <span className="font-label text-sm uppercase tracking-widest text-on-surface-variant">
+              <span className="mt-2 font-label text-sm uppercase tracking-widest text-on-surface-variant">
                 Global customers
               </span>
             </div>
-            <div className="flex flex-col items-center text-center group">
-              <span className="font-headline text-5xl sm:text-6xl font-bold text-secondary mb-2 group-hover:scale-110 transition-transform">
+            <div className="saas-stat-3d flex flex-col items-center rounded-2xl px-6 py-10 text-center">
+              <span className="font-headline text-5xl font-bold text-secondary sm:text-6xl">
                 12+
               </span>
-              <span className="font-label text-sm uppercase tracking-widest text-on-surface-variant">
+              <span className="mt-2 font-label text-sm uppercase tracking-widest text-on-surface-variant">
                 Years of experience
               </span>
             </div>
-            <div className="flex flex-col items-center text-center group">
-              <span className="font-headline text-5xl sm:text-6xl font-bold text-tertiary mb-2 group-hover:scale-110 transition-transform">
+            <div className="saas-stat-3d flex flex-col items-center rounded-2xl px-6 py-10 text-center">
+              <span className="font-headline text-5xl font-bold text-tertiary sm:text-6xl">
                 30%
               </span>
-              <span className="font-label text-sm uppercase tracking-widest text-on-surface-variant">
+              <span className="mt-2 font-label text-sm uppercase tracking-widest text-on-surface-variant">
                 Cost savings delivered
               </span>
             </div>
@@ -360,9 +364,10 @@ export default function HomeClient({
 
         <section
           id="catalog"
-          className="scroll-mt-[calc(5.25rem+env(safe-area-inset-top,0px))] bg-surface px-4 py-16 sm:px-6 sm:py-20 md:px-8 md:py-32"
+          className="relative scroll-mt-[calc(5.25rem+env(safe-area-inset-top,0px))] bg-surface px-4 py-16 sm:px-6 sm:py-20 md:px-8 md:py-32"
         >
-          <div className="max-w-7xl mx-auto">
+          <AmbientScene variant="catalog" />
+          <div className="relative mx-auto max-w-7xl">
             <div className="flex flex-col md:flex-row md:justify-between md:items-end gap-6 mb-16">
               <div>
                 <h2 className="font-headline text-3xl md:text-5xl font-bold mb-4 text-on-surface">
@@ -390,13 +395,22 @@ export default function HomeClient({
 
         <section
           id="products"
-          className="scroll-mt-[calc(5.25rem+env(safe-area-inset-top,0px))] bg-surface-container-low px-4 py-14 sm:px-6 sm:py-20 md:px-8"
+          className="relative scroll-mt-[calc(5.25rem+env(safe-area-inset-top,0px))] overflow-hidden bg-surface-container-low px-4 py-14 sm:px-6 sm:py-20 md:px-8"
         >
-          <div className="mx-auto max-w-7xl">
-            <div className="flex flex-col gap-4 sm:flex-row sm:flex-wrap sm:items-center sm:justify-between">
-              <h2 className="font-headline text-2xl font-bold text-on-surface md:text-3xl">
-                Product catalog
-              </h2>
+          <AmbientScene variant="catalog" />
+          <div className="relative mx-auto max-w-7xl">
+            <div className="flex flex-col gap-4 sm:flex-row sm:flex-wrap sm:items-end sm:justify-between">
+              <div>
+                <span className="saas-badge-shimmer mb-3 inline-block rounded-full border border-primary/20 px-3 py-1 font-label text-[10px] font-bold uppercase tracking-[0.25em] text-primary">
+                  Premium catalog
+                </span>
+                <h2 className="font-headline text-2xl font-bold text-on-surface md:text-4xl">
+                  Product showcase
+                </h2>
+                <p className="mt-2 max-w-lg text-sm text-on-surface-variant">
+                  Interactive 3D gallery — hover to explore, tap to zoom, quote in one click.
+                </p>
+              </div>
               <div className="flex w-full items-center gap-3 sm:w-auto">
                 <label htmlFor="cat-filter" className="sr-only">
                   Category
@@ -405,7 +419,7 @@ export default function HomeClient({
                   id="cat-filter"
                   value={catalogCategory}
                   onChange={(e) => setCatalogCategory(e.target.value)}
-                  className="min-h-[48px] w-full rounded-lg border border-outline-variant bg-surface-container px-4 py-3 text-base text-on-surface [color-scheme:dark] focus:outline-none focus:ring-2 focus:ring-primary/40 sm:min-h-0 sm:w-auto sm:max-w-xs sm:py-2 sm:text-sm"
+                  className="min-h-[48px] w-full rounded-xl border border-outline-variant/60 bg-surface-container/80 px-4 py-3 text-base text-on-surface shadow-[inset_0_1px_0_rgba(255,255,255,0.05)] backdrop-blur-sm [color-scheme:dark] focus:outline-none focus:ring-2 focus:ring-primary/40 sm:min-h-0 sm:w-auto sm:max-w-xs sm:py-2 sm:text-sm"
                 >
                   {filterOptions.map((c) => (
                     <option key={c} value={c}>
@@ -415,8 +429,8 @@ export default function HomeClient({
                 </select>
               </div>
             </div>
-            <div className="mt-8 grid gap-5 sm:mt-10 sm:grid-cols-2 sm:gap-6 lg:grid-cols-3">
-              {filteredProducts.map((product) => {
+            <div className="mt-10 grid gap-8 sm:grid-cols-2 lg:grid-cols-3 lg:gap-10 [perspective:1400px]">
+              {filteredProducts.map((product, index) => {
                 const imageLabel = product.category
                   ? `${product.category} — ${product.sku}`
                   : product.sku;
@@ -425,46 +439,18 @@ export default function HomeClient({
                   product.category || product.sku,
                 );
                 return (
-                  <article
+                  <PremiumProductCard
                     key={product.id ?? product.sku}
-                    className="rounded-xl glass-card border border-outline-variant/30 p-4 neon-glow-primary transition-all"
-                  >
-                    <button
-                      type="button"
-                      onClick={() =>
-                        setImageLightbox({ src: visual.src, alt: imageLabel })
-                      }
-                      className="group/img relative aspect-video w-full overflow-hidden rounded-lg bg-surface-container-highest p-0 text-left ring-offset-2 ring-offset-surface-container-low transition hover:ring-2 hover:ring-primary/50 focus:outline-none focus-visible:ring-2 focus-visible:ring-primary"
-                      aria-label={`View full image: ${imageLabel}`}
-                      title="View full image"
-                    >
-                      <CatalogueCoverImage
-                        visual={visual}
-                        alt={imageLabel}
-                        sizes="(max-width: 768px) 100vw, 33vw"
-                        className="absolute inset-0 h-full w-full"
-                      />
-                      <span
-                        className="pointer-events-none absolute inset-0 flex items-center justify-center bg-black/0 opacity-0 transition group-hover/img:bg-black/30 group-hover/img:opacity-100"
-                        aria-hidden
-                      >
-                        <span className="material-symbols-outlined text-4xl text-white drop-shadow-lg">
-                          zoom_in
-                        </span>
-                      </span>
-                    </button>
-                    <p className="mt-3 text-xs text-on-surface-variant">{product.sku}</p>
-                    <p className="text-sm text-on-surface-variant">
-                      {product.category || "General"}
-                    </p>
-                    <button
-                      type="button"
-                      onClick={() => setShowPopup(true)}
-                      className="mt-4 w-full min-h-[48px] rounded-full bg-primary text-on-primary px-4 py-3 text-xs font-bold uppercase tracking-widest transition hover:shadow-[0_0_20px_rgba(161,250,255,0.35)]"
-                    >
-                      Get your quote
-                    </button>
-                  </article>
+                    sku={product.sku}
+                    category={product.category || "General"}
+                    visual={visual}
+                    imageLabel={imageLabel}
+                    index={index}
+                    onZoom={() =>
+                      setImageLightbox({ src: visual.src, alt: imageLabel })
+                    }
+                    onQuote={() => setShowPopup(true)}
+                  />
                 );
               })}
             </div>
@@ -487,10 +473,7 @@ export default function HomeClient({
             </p>
             <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
               {WHY_CHOOSE.map((item) => (
-                <div
-                  key={item.title}
-                  className="rounded-xl bg-surface-container p-6 border border-outline-variant/25 hover:border-primary/30 transition-colors"
-                >
+                <div key={item.title} className="feature-card-3d rounded-2xl p-6">
                   <span className="material-symbols-outlined text-3xl text-primary mb-3">
                     {item.icon}
                   </span>
