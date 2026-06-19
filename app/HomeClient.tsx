@@ -290,24 +290,25 @@ export default function HomeClient({
       <main className="relative pb-[calc(5.5rem+env(safe-area-inset-bottom,0px))] pt-[calc(6.5rem+env(safe-area-inset-top,0px))] md:pb-0 md:pt-20">
         <section className="relative flex min-h-[min(720px,92dvh)] items-end overflow-hidden px-4 pb-10 sm:min-h-[min(821px,100dvh)] sm:items-center sm:px-6 md:px-8">
           <AmbientScene variant="hero" />
-          <div className="absolute inset-0 z-0 opacity-55 md:opacity-45">
+          <div className="absolute inset-0 z-0">
             <HeroBackgroundSlideshow images={heroSlideshowImages} />
-            <div className="absolute inset-0 bg-gradient-to-t from-surface via-surface/92 to-surface/50 md:bg-gradient-to-r md:from-surface md:via-surface/85 md:to-surface/25" />
+            {/* Soft edge scrim for text legibility — does not blanket the whole image */}
+            <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/45 via-transparent to-transparent sm:bg-gradient-to-r sm:from-black/35 sm:via-transparent sm:to-transparent" />
           </div>
-          <div className="hero-glass-panel relative z-10 w-full max-w-4xl rounded-2xl p-5 sm:p-8 md:rounded-none md:border-0 md:bg-transparent md:p-0 md:shadow-none md:backdrop-blur-none">
+          <div className="relative z-10 w-full max-w-4xl p-0 sm:p-0">
             <span className="saas-badge-shimmer mb-3 inline-block rounded-full border border-primary/25 px-2.5 py-1 font-label text-[9px] font-bold uppercase tracking-[0.2em] text-primary sm:text-[10px] sm:tracking-[0.25em]">
               Hospitality · Events · Corporate
             </span>
             <span className="mb-2 block font-label text-[0.65rem] uppercase tracking-[0.2em] text-secondary sm:mb-4 sm:text-[0.75rem] sm:tracking-[0.3em]">
               Uniform programs for hospitality & events
             </span>
-            <h1 className="hero-title-3d mb-4 font-headline text-[clamp(1.75rem,7vw,2.75rem)] font-bold leading-[1.1] tracking-tight text-on-surface sm:mb-6 sm:text-4xl md:text-7xl lg:text-8xl">
+            <h1 className="hero-title-3d mb-4 font-headline text-[clamp(1.75rem,7vw,2.75rem)] font-bold leading-[1.1] tracking-tight text-on-surface drop-shadow-[0_2px_16px_rgba(0,0,0,0.85)] sm:mb-6 sm:text-4xl md:text-7xl lg:text-8xl">
               Premium Uniforms{" "}
               <span className="premium-section-title block sm:inline">
                 for your business
               </span>
             </h1>
-            <p className="mb-6 max-w-lg text-sm leading-relaxed text-on-surface-variant sm:mb-8 sm:text-base">
+            <p className="mb-6 max-w-lg text-sm leading-relaxed text-on-surface drop-shadow-[0_1px_10px_rgba(0,0,0,0.9)] sm:mb-8 sm:text-base">
               Bespoke chef coats, hotel kits, and event staff apparel — sourced, branded, and
               delivered across India.
             </p>
