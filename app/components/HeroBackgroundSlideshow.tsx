@@ -35,7 +35,7 @@ export default function HeroBackgroundSlideshow({
           <img
             src={src}
             alt=""
-            className="h-full w-full object-cover object-center"
+            className="hero-slide-img h-full w-full"
             loading={i === 0 ? "eager" : "lazy"}
             fetchPriority={i === 0 ? "high" : "auto"}
             decoding="async"
