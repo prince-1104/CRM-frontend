@@ -440,7 +440,7 @@ export default function HomeClient({
                 onChange={setCatalogCategory}
               />
             </div>
-            <div className="grid grid-cols-2 gap-2.5 sm:gap-6 lg:grid-cols-3 lg:gap-10 [perspective:1400px]">
+            <div className="grid grid-cols-2 gap-2.5 sm:gap-6 lg:grid-cols-3 lg:gap-10">
               {filteredProducts.map((product, index) => {
                 const imageLabel = product.category
                   ? `${product.category} — ${product.sku}`

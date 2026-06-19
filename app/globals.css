@@ -89,20 +89,16 @@
   animation-delay: -9s;
 }
 
-.product-card-3d {
-  transform-style: preserve-3d;
-  transition: transform 0.35s cubic-bezier(0.23, 1, 0.32, 1);
-  will-change: transform;
+.product-card-hover {
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
 
-.product-stage-3d {
-  transform-style: preserve-3d;
-  transform: translateZ(24px) rotateX(2deg);
-  transition: transform 0.5s cubic-bezier(0.23, 1, 0.32, 1);
+.product-card-hover:hover {
+  transform: translateY(-4px);
 }
 
-.group\/card:hover .product-stage-3d {
-  transform: translateZ(36px) rotateX(0deg);
+.product-card-hover:active {
+  transform: translateY(-1px);
 }
 
 .saas-cta-3d {
@@ -346,12 +342,8 @@
     transform: perspective(800px) rotateX(62deg) scale(1.2);
   }
 
-  .product-card-3d {
-    transform: perspective(900px) rotateX(3deg) translateZ(4px) !important;
-  }
-
-  .product-stage-3d {
-    transform: translateZ(12px);
+  .product-card-hover:active {
+    transform: translateY(-2px);
   }
 
   .bento-card-3d:active {
