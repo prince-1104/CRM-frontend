@@ -3,6 +3,9 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
 import LandingCatalogBento from "./components/LandingCatalogBento";
 import AmbientScene from "./components/AmbientScene";
+import CategoryPills from "./components/CategoryPills";
+import MobileActionDock from "./components/MobileActionDock";
+import MobileCategoryNav from "./components/MobileCategoryNav";
 import PremiumProductCard from "./components/PremiumProductCard";
 import PopupForm, {
   LEAD_POPUP_DELAY_MS_FIRST,
@@ -192,10 +195,15 @@ export default function HomeClient({
   }
 
   return (
-    <>
-      <nav className="fixed top-0 z-50 flex w-full max-w-full items-center justify-between gap-2 border-b border-outline-variant/10 bg-surface/75 px-4 py-3 backdrop-blur-lg shadow-[0_20px_40px_rgba(0,0,0,0.4)] pt-[max(0.75rem,env(safe-area-inset-top))] sm:px-6 md:px-8 md:py-4">
-        <div className="min-w-0 max-w-[min(11rem,46vw)] shrink font-headline text-lg font-bold tracking-tighter text-on-surface sm:max-w-none sm:text-xl md:text-2xl">
-          <span className="block truncate">{brandName}</span>
+    <div className="premium-shell min-h-dvh">
+      <nav className="premium-nav-bar fixed top-0 z-50 flex w-full max-w-full items-center justify-between gap-2 px-3 py-2.5 pt-[max(0.625rem,env(safe-area-inset-top))] sm:px-6 md:px-8 md:py-4">
+        <div className="flex min-w-0 items-center gap-2">
+          <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-gradient-to-br from-primary/30 to-secondary/20 ring-1 ring-primary/30 md:h-10 md:w-10">
+            <span className="font-headline text-sm font-black text-primary md:text-base">★</span>
+          </div>
+          <div className="min-w-0 max-w-[min(9rem,38vw)] shrink font-headline text-base font-bold tracking-tighter text-on-surface sm:max-w-none sm:text-xl md:text-2xl">
+            <span className="block truncate">{brandName}</span>
+          </div>
         </div>
         <div className="hidden md:flex items-center gap-6 xl:gap-8">
           {navItems.map((name) => {
@@ -218,20 +226,22 @@ export default function HomeClient({
             );
           })}
         </div>
-        <div className="flex min-w-0 shrink-0 items-center gap-2 sm:gap-3">
+        <div className="flex min-w-0 shrink-0 items-center gap-1.5 sm:gap-3">
           <a
             href={CANONICAL_TEL_HREF}
-            className="header-phone-glow touch-manipulation inline-flex min-h-[44px] shrink-0 items-center justify-center gap-1 rounded-full border border-fuchsia-400/40 bg-black/35 px-2.5 py-2 font-mono text-[clamp(10px,3.1vw,14px)] font-bold tabular-nums leading-none tracking-tight text-fuchsia-100 ring-1 ring-fuchsia-400/25 sm:min-h-0 sm:gap-1.5 sm:px-3 sm:py-2.5 sm:text-sm md:text-base"
+            className="header-phone-glow touch-manipulation inline-flex min-h-[44px] shrink-0 items-center justify-center gap-1 rounded-full border border-fuchsia-400/40 bg-black/35 px-2 py-2 font-mono text-fuchsia-100 ring-1 ring-fuchsia-400/25 sm:gap-1.5 sm:px-3 sm:py-2.5"
             aria-label={`Call ${HEADER_PHONE_DISPLAY}`}
             title="Tap to call"
           >
             <span
-              className="material-symbols-outlined shrink-0 text-[16px] leading-none text-fuchsia-200 sm:text-[17px] md:text-xl"
+              className="material-symbols-outlined shrink-0 text-[18px] leading-none text-fuchsia-200 sm:text-xl"
               aria-hidden
             >
               call
             </span>
-            <span className="whitespace-nowrap">{HEADER_PHONE_DISPLAY}</span>
+            <span className="hidden whitespace-nowrap text-sm font-bold tabular-nums sm:inline md:text-base">
+              {HEADER_PHONE_DISPLAY}
+            </span>
           </a>
           <button
             type="button"
@@ -267,10 +277,16 @@ export default function HomeClient({
         </div>
       </nav>
 
-      <main className="relative pt-20">
-        <section className="relative flex min-h-[min(921px,100dvh)] items-center overflow-hidden px-6 md:px-8">
+      <MobileCategoryNav
+        items={navItems}
+        activeCategory={catalogCategory}
+        onSelect={selectNavCategory}
+      />
+
+      <main className="relative pb-[calc(5.5rem+env(safe-area-inset-bottom,0px))] pt-[calc(6.5rem+env(safe-area-inset-top,0px))] md:pb-0 md:pt-20">
+        <section className="relative flex min-h-[min(720px,92dvh)] items-end overflow-hidden px-4 pb-10 sm:min-h-[min(821px,100dvh)] sm:items-center sm:px-6 md:px-8">
           <AmbientScene variant="hero" />
-          <div className="absolute inset-0 z-0 opacity-40">
+          <div className="absolute inset-0 z-0 opacity-50 md:opacity-40">
             <CatalogueCoverImage
               visual={heroVisual}
               alt=""
@@ -278,19 +294,26 @@ export default function HomeClient({
               priority
               className="absolute inset-0 h-full w-full"
             />
-            <div className="absolute inset-0 bg-gradient-to-r from-surface via-surface/80 to-transparent" />
+            <div className="absolute inset-0 bg-gradient-to-t from-surface via-surface/90 to-surface/40 md:bg-gradient-to-r md:from-surface md:via-surface/80 md:to-transparent" />
           </div>
-          <div className="relative z-10 max-w-4xl">
-            <span className="mb-3 block font-label text-[0.7rem] uppercase tracking-[0.25em] text-secondary drop-shadow-[0_1px_10px_rgba(0,0,0,0.9)] sm:mb-4 sm:text-[0.75rem] sm:tracking-[0.3em]">
+          <div className="hero-glass-panel relative z-10 w-full max-w-4xl rounded-2xl p-5 sm:p-8 md:rounded-none md:border-0 md:bg-transparent md:p-0 md:shadow-none md:backdrop-blur-none">
+            <span className="saas-badge-shimmer mb-3 inline-block rounded-full border border-primary/25 px-2.5 py-1 font-label text-[9px] font-bold uppercase tracking-[0.2em] text-primary sm:text-[10px] sm:tracking-[0.25em]">
+              Hospitality · Events · Corporate
+            </span>
+            <span className="mb-2 block font-label text-[0.65rem] uppercase tracking-[0.2em] text-secondary sm:mb-4 sm:text-[0.75rem] sm:tracking-[0.3em]">
               Uniform programs for hospitality & events
             </span>
-            <h1 className="hero-title-3d mb-5 font-headline text-[clamp(1.65rem,6.5vw,2.75rem)] font-bold leading-[1.12] tracking-tight text-on-surface sm:mb-6 sm:text-4xl md:text-7xl lg:text-8xl">
-              Premium Uniforms <br />
-              <span className="text-primary drop-shadow-[0_0_24px_rgba(0,0,0,0.75)]">
+            <h1 className="hero-title-3d mb-4 font-headline text-[clamp(1.75rem,7vw,2.75rem)] font-bold leading-[1.1] tracking-tight text-on-surface sm:mb-6 sm:text-4xl md:text-7xl lg:text-8xl">
+              Premium Uniforms{" "}
+              <span className="premium-section-title block sm:inline">
                 for your business
               </span>
             </h1>
-            <div className="mb-8 flex flex-wrap gap-x-4 gap-y-2 font-label text-sm text-on-surface drop-shadow-[0_1px_8px_rgba(0,0,0,0.85)] sm:mb-10">
+            <p className="mb-6 max-w-lg text-sm leading-relaxed text-on-surface-variant sm:mb-8 sm:text-base">
+              Bespoke chef coats, hotel kits, and event staff apparel — sourced, branded, and
+              delivered across India.
+            </p>
+            <div className="mb-6 hidden flex-wrap gap-x-4 gap-y-2 font-label text-sm text-on-surface sm:mb-10 md:flex">
               {navItems.map((label, i) => {
                 const colors = [
                   "bg-primary",
@@ -317,46 +340,46 @@ export default function HomeClient({
               <button
                 type="button"
                 onClick={() => setShowPopup(true)}
-                className="min-h-[52px] w-full touch-manipulation rounded-full bg-primary px-8 py-3.5 font-bold uppercase tracking-widest text-on-primary transition-all hover:scale-[1.02] hover:shadow-[0_0_25px_rgba(161,250,255,0.5)] active:scale-[0.98] sm:w-auto sm:min-h-0 sm:px-10 sm:py-4"
+                className="saas-cta-3d min-h-[52px] w-full touch-manipulation rounded-2xl px-8 py-3.5 text-sm font-bold uppercase tracking-widest text-on-primary sm:w-auto sm:rounded-full sm:px-10 sm:py-4"
               >
                 Get Your Quote
               </button>
               <button
                 type="button"
-                onClick={() => scrollToId("catalog")}
-                className="min-h-[52px] w-full touch-manipulation rounded-full border border-outline-variant px-8 py-3.5 font-bold uppercase tracking-widest text-on-surface transition-all hover:border-secondary hover:bg-surface-container-high active:scale-[0.98] sm:w-auto sm:min-h-0 sm:px-10 sm:py-4"
+                onClick={() => scrollToId("products")}
+                className="min-h-[52px] w-full touch-manipulation rounded-2xl border border-outline-variant/60 bg-surface-container/50 px-8 py-3.5 text-sm font-bold uppercase tracking-widest text-on-surface backdrop-blur-sm transition-all hover:border-secondary hover:bg-surface-container-high active:scale-[0.98] sm:w-auto sm:rounded-full sm:px-10 sm:py-4"
               >
-                Browse catalog
+                View products
               </button>
             </div>
           </div>
         </section>
 
-        <section className="relative bg-surface-container-low px-4 py-16 sm:px-6 sm:py-20 md:px-8 md:py-24">
+        <section className="relative bg-surface-container-low px-3 py-10 sm:px-6 sm:py-20 md:px-8 md:py-24">
           <AmbientScene variant="default" />
-          <div className="relative mx-auto grid max-w-7xl grid-cols-1 gap-6 md:grid-cols-3 md:gap-8">
-            <div className="saas-stat-3d flex flex-col items-center rounded-2xl px-6 py-10 text-center">
-              <span className="font-headline text-5xl font-bold text-primary sm:text-6xl">
+          <div className="relative mx-auto grid max-w-7xl grid-cols-3 gap-2 sm:gap-6 md:gap-8">
+            <div className="saas-stat-3d flex flex-col items-center rounded-xl px-2 py-5 text-center sm:rounded-2xl sm:px-6 sm:py-10">
+              <span className="font-headline text-2xl font-bold text-primary sm:text-5xl md:text-6xl">
                 200+
               </span>
-              <span className="mt-2 font-label text-sm uppercase tracking-widest text-on-surface-variant">
+              <span className="mt-1 font-label text-[9px] uppercase leading-tight tracking-wider text-on-surface-variant sm:mt-2 sm:text-sm sm:tracking-widest">
                 Global customers
               </span>
             </div>
-            <div className="saas-stat-3d flex flex-col items-center rounded-2xl px-6 py-10 text-center">
-              <span className="font-headline text-5xl font-bold text-secondary sm:text-6xl">
+            <div className="saas-stat-3d flex flex-col items-center rounded-xl px-2 py-5 text-center sm:rounded-2xl sm:px-6 sm:py-10">
+              <span className="font-headline text-2xl font-bold text-secondary sm:text-5xl md:text-6xl">
                 12+
               </span>
-              <span className="mt-2 font-label text-sm uppercase tracking-widest text-on-surface-variant">
-                Years of experience
+              <span className="mt-1 font-label text-[9px] uppercase leading-tight tracking-wider text-on-surface-variant sm:mt-2 sm:text-sm sm:tracking-widest">
+                Years experience
               </span>
             </div>
-            <div className="saas-stat-3d flex flex-col items-center rounded-2xl px-6 py-10 text-center">
-              <span className="font-headline text-5xl font-bold text-tertiary sm:text-6xl">
+            <div className="saas-stat-3d flex flex-col items-center rounded-xl px-2 py-5 text-center sm:rounded-2xl sm:px-6 sm:py-10">
+              <span className="font-headline text-2xl font-bold text-tertiary sm:text-5xl md:text-6xl">
                 30%
               </span>
-              <span className="mt-2 font-label text-sm uppercase tracking-widest text-on-surface-variant">
-                Cost savings delivered
+              <span className="mt-1 font-label text-[9px] uppercase leading-tight tracking-wider text-on-surface-variant sm:mt-2 sm:text-sm sm:tracking-widest">
+                Cost savings
               </span>
             </div>
           </div>
@@ -364,7 +387,7 @@ export default function HomeClient({
 
         <section
           id="catalog"
-          className="relative scroll-mt-[calc(5.25rem+env(safe-area-inset-top,0px))] bg-surface px-4 py-16 sm:px-6 sm:py-20 md:px-8 md:py-32"
+          className="relative scroll-mt-[calc(7rem+env(safe-area-inset-top,0px))] bg-surface px-3 py-12 sm:px-6 sm:py-20 md:scroll-mt-[calc(5.25rem+env(safe-area-inset-top,0px))] md:px-8 md:py-32"
         >
           <AmbientScene variant="catalog" />
           <div className="relative mx-auto max-w-7xl">
@@ -395,41 +418,29 @@ export default function HomeClient({
 
         <section
           id="products"
-          className="relative scroll-mt-[calc(5.25rem+env(safe-area-inset-top,0px))] overflow-hidden bg-surface-container-low px-4 py-14 sm:px-6 sm:py-20 md:px-8"
+          className="relative scroll-mt-[calc(7rem+env(safe-area-inset-top,0px))] overflow-hidden bg-surface-container-low px-3 py-10 sm:px-6 sm:py-20 md:scroll-mt-[calc(5.25rem+env(safe-area-inset-top,0px))] md:px-8"
         >
           <AmbientScene variant="catalog" />
           <div className="relative mx-auto max-w-7xl">
-            <div className="flex flex-col gap-4 sm:flex-row sm:flex-wrap sm:items-end sm:justify-between">
+            <div className="mb-5 space-y-4">
               <div>
-                <span className="saas-badge-shimmer mb-3 inline-block rounded-full border border-primary/20 px-3 py-1 font-label text-[10px] font-bold uppercase tracking-[0.25em] text-primary">
+                <span className="saas-badge-shimmer mb-2 inline-block rounded-full border border-primary/20 px-2.5 py-1 font-label text-[9px] font-bold uppercase tracking-[0.2em] text-primary sm:text-[10px]">
                   Premium catalog
                 </span>
-                <h2 className="font-headline text-2xl font-bold text-on-surface md:text-4xl">
-                  Product showcase
+                <h2 className="font-headline text-xl font-bold text-on-surface sm:text-2xl md:text-4xl">
+                  <span className="premium-section-title">Product showcase</span>
                 </h2>
-                <p className="mt-2 max-w-lg text-sm text-on-surface-variant">
-                  Interactive 3D gallery — hover to explore, tap to zoom, quote in one click.
+                <p className="mt-1.5 max-w-lg text-xs text-on-surface-variant sm:mt-2 sm:text-sm">
+                  Swipe categories · tap to zoom · quote in one tap.
                 </p>
               </div>
-              <div className="flex w-full items-center gap-3 sm:w-auto">
-                <label htmlFor="cat-filter" className="sr-only">
-                  Category
-                </label>
-                <select
-                  id="cat-filter"
-                  value={catalogCategory}
-                  onChange={(e) => setCatalogCategory(e.target.value)}
-                  className="min-h-[48px] w-full rounded-xl border border-outline-variant/60 bg-surface-container/80 px-4 py-3 text-base text-on-surface shadow-[inset_0_1px_0_rgba(255,255,255,0.05)] backdrop-blur-sm [color-scheme:dark] focus:outline-none focus:ring-2 focus:ring-primary/40 sm:min-h-0 sm:w-auto sm:max-w-xs sm:py-2 sm:text-sm"
-                >
-                  {filterOptions.map((c) => (
-                    <option key={c} value={c}>
-                      {c === "All" ? "All categories" : c}
-                    </option>
-                  ))}
-                </select>
-              </div>
+              <CategoryPills
+                options={filterOptions}
+                value={catalogCategory}
+                onChange={setCatalogCategory}
+              />
             </div>
-            <div className="mt-10 grid gap-8 sm:grid-cols-2 lg:grid-cols-3 lg:gap-10 [perspective:1400px]">
+            <div className="grid grid-cols-2 gap-2.5 sm:gap-6 lg:grid-cols-3 lg:gap-10 [perspective:1400px]">
               {filteredProducts.map((product, index) => {
                 const imageLabel = product.category
                   ? `${product.category} — ${product.sku}`
@@ -487,14 +498,14 @@ export default function HomeClient({
 
         <section className="bg-surface-container-low px-4 py-16 sm:px-6 sm:py-20 md:px-8 md:py-24">
           <div className="max-w-7xl mx-auto">
-            <h2 className="font-headline text-3xl md:text-4xl font-bold mb-12 text-center text-on-surface">
+            <h2 className="font-headline text-3xl md:text-4xl font-bold mb-8 sm:mb-12 text-center text-on-surface">
               What clients say
             </h2>
-            <div className="grid gap-8 md:grid-cols-3">
+            <div className="flex snap-x snap-mandatory gap-4 overflow-x-auto pb-2 pl-1 [scrollbar-width:none] md:grid md:grid-cols-3 md:gap-8 md:overflow-visible md:pb-0 md:pl-0 [&::-webkit-scrollbar]:hidden">
               {TESTIMONIALS.map((t) => (
                 <blockquote
                   key={t.quote.slice(0, 24)}
-                  className="rounded-xl glass-card border border-outline-variant/30 p-8 flex flex-col"
+                  className="premium-testimonial-card flex flex-col rounded-2xl p-6 md:rounded-xl md:p-8 md:glass-card md:border md:border-outline-variant/30"
                 >
                   <span className="text-4xl text-secondary/80 font-serif leading-none mb-4">
                     &ldquo;
@@ -578,7 +589,7 @@ export default function HomeClient({
 
       <footer
         id="site-footer"
-        className="scroll-mt-[calc(5.25rem+env(safe-area-inset-top,0px))] border-t border-surface-container bg-surface px-4 py-10 pb-[max(2.5rem,env(safe-area-inset-bottom))] sm:px-6 sm:py-12 md:px-8"
+        className="scroll-mt-[calc(5.25rem+env(safe-area-inset-top,0px))] border-t border-surface-container bg-surface px-4 py-10 pb-[max(1.5rem,env(safe-area-inset-bottom))] sm:px-6 sm:py-12 md:px-8 md:pb-[max(2.5rem,env(safe-area-inset-bottom))]"
       >
         <div className="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center gap-6">
           <div className="text-lg font-black text-primary font-headline uppercase tracking-tighter">
@@ -611,7 +622,13 @@ export default function HomeClient({
         />
       ) : null}
 
+      <MobileActionDock
+        onQuote={() => setShowPopup(true)}
+        waHref={primaryWaLink}
+        telHref={CANONICAL_TEL_HREF}
+      />
+
       <PopupForm isOpen={showPopup} onClose={closeLeadPopup} />
-    </>
+    </div>
   );
 }

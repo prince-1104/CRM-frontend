@@ -92,7 +92,7 @@ export default function LandingCatalogBento({
             </div>
 
             {isWide ? (
-              <div className="relative z-10 flex min-h-[min(280px,58dvh)] flex-col items-stretch justify-between gap-8 p-6 sm:min-h-[300px] sm:flex-row sm:items-center sm:justify-between sm:gap-12 sm:p-8 md:p-10">
+              <div className="relative z-10 flex min-h-[min(240px,52dvh)] flex-col items-stretch justify-between gap-6 p-5 sm:min-h-[280px] sm:flex-row sm:items-center sm:justify-between sm:gap-12 sm:p-8 md:min-h-[300px] md:p-10">
                 <div className="max-w-xl rounded-xl bg-black/35 px-4 py-4 backdrop-blur-sm sm:px-5 sm:py-5 md:bg-transparent md:px-0 md:py-0 md:backdrop-blur-none">
                   <h3 className="font-headline text-3xl font-bold uppercase tracking-tighter text-on-surface drop-shadow-[0_2px_16px_rgba(0,0,0,0.95)] sm:text-4xl">
                     {c.name}
@@ -103,7 +103,7 @@ export default function LandingCatalogBento({
                 </span>
               </div>
             ) : isLarge ? (
-              <div className="relative z-10 flex h-full min-h-[min(22rem,62dvh)] flex-col justify-between p-6 sm:min-h-[450px] sm:p-8 md:p-10">
+              <div className="relative z-10 flex h-full min-h-[min(18rem,55dvh)] flex-col justify-between p-5 sm:min-h-[450px] sm:p-8 md:p-10">
                 <div className="-m-1 rounded-xl bg-black/30 p-3 backdrop-blur-sm sm:m-0 sm:bg-transparent sm:p-0 sm:backdrop-blur-none">
                   <span className="mb-4 inline-block rounded-full bg-primary-container px-3 py-1.5 font-label text-[0.65rem] font-bold uppercase tracking-widest text-on-primary-container sm:mb-6">
                     {badge}
@@ -120,7 +120,7 @@ export default function LandingCatalogBento({
                 </span>
               </div>
             ) : (
-              <div className="relative z-10 flex h-full min-h-[min(22rem,62dvh)] flex-col justify-between p-6 sm:min-h-[450px] sm:p-8">
+              <div className="relative z-10 flex h-full min-h-[min(16rem,50dvh)] flex-col justify-between p-5 sm:min-h-[450px] sm:p-8">
                 <div className="-m-1 rounded-xl bg-black/30 p-3 backdrop-blur-sm sm:m-0 sm:bg-transparent sm:p-0 sm:backdrop-blur-none">
                   <h3 className="mb-4 font-headline text-[clamp(1.5rem,6.5vw,2.25rem)] font-bold uppercase tracking-tighter text-on-surface drop-shadow-[0_2px_16px_rgba(0,0,0,0.95)] sm:mb-6 sm:text-3xl">
                     {c.name}
