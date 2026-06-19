@@ -288,14 +288,15 @@ export default function HomeClient({
       />
 
       <main className="relative pb-[calc(5.5rem+env(safe-area-inset-bottom,0px))] pt-[calc(6.5rem+env(safe-area-inset-top,0px))] md:pb-0 md:pt-20">
-        <section className="relative flex min-h-[min(720px,92dvh)] items-end overflow-hidden px-4 pb-10 sm:min-h-[min(821px,100dvh)] sm:items-center sm:px-6 md:px-8">
+        <section className="relative flex min-h-[min(520px,78dvh)] items-end overflow-hidden px-4 pb-8 sm:min-h-[min(640px,88dvh)] sm:items-center sm:px-6 sm:pb-10 md:min-h-[min(720px,92dvh)] md:px-8">
           <AmbientScene variant="hero" />
           <div className="absolute inset-0 z-0">
-            <HeroBackgroundSlideshow images={heroSlideshowImages} />
-            {/* Soft edge scrim for text legibility — does not blanket the whole image */}
-            <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/45 via-transparent to-transparent sm:bg-gradient-to-r sm:from-black/35 sm:via-transparent sm:to-transparent" />
+            <div className="hero-bg-slideshow absolute inset-0">
+              <HeroBackgroundSlideshow images={heroSlideshowImages} />
+            </div>
+            <div className="hero-bg-scrim pointer-events-none absolute inset-0" />
           </div>
-          <div className="relative z-10 w-full max-w-4xl p-0 sm:p-0">
+          <div className="hero-content-panel relative z-10 w-full max-w-4xl">
             <span className="saas-badge-shimmer mb-3 inline-block rounded-full border border-primary/25 px-2.5 py-1 font-label text-[9px] font-bold uppercase tracking-[0.2em] text-primary sm:text-[10px] sm:tracking-[0.25em]">
               Hospitality · Events · Corporate
             </span>

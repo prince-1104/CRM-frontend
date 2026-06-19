@@ -44,7 +44,7 @@ export default function HeroBackgroundSlideshow({
       ))}
 
       {slides.length > 1 ? (
-        <div className="absolute bottom-4 left-1/2 z-[1] flex -translate-x-1/2 gap-1.5 sm:bottom-6 md:bottom-8">
+        <div className="absolute bottom-20 left-1/2 z-[1] hidden -translate-x-1/2 gap-1.5 sm:bottom-6 sm:flex md:bottom-8">
           {slides.map((src, i) => (
             <button
               key={`dot-${src}-${i}`}
