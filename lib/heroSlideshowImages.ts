@@ -13,12 +13,19 @@ export const AI_HERO_SLIDES = [
 
 const DEFAULT_HERO_SLIDE = AI_HERO_SLIDES[0];
 
+function resolveHeroSlideSrc(trimmed: string): string | null {
+  // Static assets in Next.js /public — keep same-origin paths (do not prefix R2 CDN)
+  if (trimmed.startsWith("/images/")) return trimmed;
+  return (
+    storefrontCatalogImageSrc(trimmed) ??
+    (trimmed.startsWith("http") || trimmed.startsWith("/") ? trimmed : null)
+  );
+}
+
 function addUnique(seen: Set<string>, out: string[], raw: string | null | undefined) {
   if (!raw?.trim()) return;
   const trimmed = raw.trim();
-  const src =
-    storefrontCatalogImageSrc(trimmed) ??
-    (trimmed.startsWith("http") || trimmed.startsWith("/") ? trimmed : null);
+  const src = resolveHeroSlideSrc(trimmed);
   if (!src || seen.has(src)) return;
   seen.add(src);
   out.push(src);
