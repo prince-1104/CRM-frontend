@@ -7,16 +7,17 @@ import CategoryPills from "./components/CategoryPills";
 import MobileActionDock from "./components/MobileActionDock";
 import MobileCategoryNav from "./components/MobileCategoryNav";
 import PremiumProductCard from "./components/PremiumProductCard";
+import HeroBackgroundSlideshow from "./components/HeroBackgroundSlideshow";
 import PopupForm, {
   LEAD_POPUP_DELAY_MS_FIRST,
   LEAD_POPUP_DELAY_MS_SECOND,
   markLeadPopupDismissedForSession,
   shouldSkipLeadAutoOpen,
 } from "./components/PopupForm";
-import CatalogueCoverImage from "./components/CatalogueCoverImage";
 import ProductImageLightbox from "./components/ProductImageLightbox";
 import type { LandingData, LandingProductItem } from "../lib/fetchLandingData";
-import { heroDisplayVisual, resolveCatalogVisual } from "../lib/industryStockImages";
+import { resolveCatalogVisual } from "../lib/industryStockImages";
+import { collectHeroSlideshowImages } from "../lib/heroSlideshowImages";
 
 const fallbackProducts: LandingProductItem[] = [
   { sku: "SU-CH-001", name: "Chef Coat Pro", category: "Catering", active: true },
@@ -168,7 +169,10 @@ export default function HomeClient({
     storefront.business_name?.trim() || "Star Uniform";
   const addressLine =
     storefront.address?.trim() || CANONICAL_ADDRESS_TEXT;
-  const heroVisual = heroDisplayVisual(catalogueCards[0]?.cover_image_url ?? null);
+  const heroSlideshowImages = useMemo(
+    () => collectHeroSlideshowImages(catalogueCards, products, catalogCategories),
+    [catalogueCards, products, catalogCategories],
+  );
 
   function selectNavCategory(name: string) {
     const lower = name.toLowerCase();
@@ -286,15 +290,9 @@ export default function HomeClient({
       <main className="relative pb-[calc(5.5rem+env(safe-area-inset-bottom,0px))] pt-[calc(6.5rem+env(safe-area-inset-top,0px))] md:pb-0 md:pt-20">
         <section className="relative flex min-h-[min(720px,92dvh)] items-end overflow-hidden px-4 pb-10 sm:min-h-[min(821px,100dvh)] sm:items-center sm:px-6 md:px-8">
           <AmbientScene variant="hero" />
-          <div className="absolute inset-0 z-0 opacity-50 md:opacity-40">
-            <CatalogueCoverImage
-              visual={heroVisual}
-              alt=""
-              sizes="100vw"
-              priority
-              className="absolute inset-0 h-full w-full"
-            />
-            <div className="absolute inset-0 bg-gradient-to-t from-surface via-surface/90 to-surface/40 md:bg-gradient-to-r md:from-surface md:via-surface/80 md:to-transparent" />
+          <div className="absolute inset-0 z-0 opacity-55 md:opacity-45">
+            <HeroBackgroundSlideshow images={heroSlideshowImages} />
+            <div className="absolute inset-0 bg-gradient-to-t from-surface via-surface/92 to-surface/50 md:bg-gradient-to-r md:from-surface md:via-surface/85 md:to-surface/25" />
           </div>
           <div className="hero-glass-panel relative z-10 w-full max-w-4xl rounded-2xl p-5 sm:p-8 md:rounded-none md:border-0 md:bg-transparent md:p-0 md:shadow-none md:backdrop-blur-none">
             <span className="saas-badge-shimmer mb-3 inline-block rounded-full border border-primary/25 px-2.5 py-1 font-label text-[9px] font-bold uppercase tracking-[0.2em] text-primary sm:text-[10px] sm:tracking-[0.25em]">

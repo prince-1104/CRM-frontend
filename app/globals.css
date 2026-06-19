@@ -89,8 +89,38 @@
   animation-delay: -9s;
 }
 
-.product-card-hover {
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
+.hero-slide {
+  opacity: 0;
+  transition: opacity 1.4s ease-in-out;
+  will-change: opacity;
+}
+
+.hero-slide-active {
+  opacity: 1;
+}
+
+.hero-slide img {
+  transform: scale(1.03);
+}
+
+.hero-slide-active img {
+  animation: hero-ken-burns 18s ease-out forwards;
+}
+
+@keyframes hero-ken-burns {
+  from {
+    transform: scale(1.03);
+  }
+  to {
+    transform: scale(1.08);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hero-slide-active img {
+    animation: none;
+    transform: scale(1.03);
+  }
 }
 
 .product-card-hover:hover {
