@@ -1,5 +1,6 @@
 import Link from "next/link";
 import CustomOrderForm from "../components/CustomOrderForm";
+import SiteLogo from "../components/SiteLogo";
 import { fetchLandingData } from "../../lib/fetchLandingData";
 
 export const metadata = {
@@ -16,8 +17,9 @@ export default async function CustomOrdersPage() {
   return (
     <div className="premium-shell min-h-dvh">
       <nav className="premium-nav-bar flex w-full items-center justify-between px-4 py-3 sm:px-6 md:px-8">
-        <Link href="/" className="font-headline text-lg font-bold text-on-surface">
-          ★ {brandName}
+        <Link href="/" className="flex items-center gap-2">
+          <SiteLogo />
+          <span className="font-headline text-lg font-bold text-on-surface">{brandName}</span>
         </Link>
         <Link
           href="/contact"

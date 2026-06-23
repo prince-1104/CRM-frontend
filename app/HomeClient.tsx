@@ -10,6 +10,7 @@ import MobileActionDock from "./components/MobileActionDock";
 import MobileCategoryNav from "./components/MobileCategoryNav";
 import PremiumProductCard from "./components/PremiumProductCard";
 import HeroBackgroundSlideshow from "./components/HeroBackgroundSlideshow";
+import SiteLogo from "./components/SiteLogo";
 import PopupForm, {
   LEAD_POPUP_DELAY_MS_FIRST,
   LEAD_POPUP_DELAY_MS_SECOND,
@@ -210,14 +211,12 @@ export default function HomeClient({
   return (
     <div className="premium-shell min-h-dvh">
       <nav className="premium-nav-bar fixed top-0 z-50 flex w-full max-w-full items-center justify-between gap-2 px-3 py-2.5 pt-[max(0.625rem,env(safe-area-inset-top))] sm:px-6 md:px-8 md:py-4">
-        <div className="flex min-w-0 items-center gap-2">
-          <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-gradient-to-br from-primary/30 to-secondary/20 ring-1 ring-primary/30 md:h-10 md:w-10">
-            <span className="font-headline text-sm font-black text-primary md:text-base">★</span>
-          </div>
+        <Link href="/" className="flex min-w-0 items-center gap-2">
+          <SiteLogo />
           <div className="min-w-0 max-w-[min(9rem,38vw)] shrink font-headline text-base font-bold tracking-tighter text-on-surface sm:max-w-none sm:text-xl md:text-2xl">
             <span className="block truncate">{brandName}</span>
           </div>
-        </div>
+        </Link>
         <div className="hidden md:flex items-center gap-6 xl:gap-8">
           {navItems.map((name) => {
             const active =

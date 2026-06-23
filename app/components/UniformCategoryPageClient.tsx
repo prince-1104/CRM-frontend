@@ -7,6 +7,7 @@ import MobileActionDock from "./MobileActionDock";
 import PremiumProductCard from "./PremiumProductCard";
 import ProductImageLightbox from "./ProductImageLightbox";
 import PopupForm from "./PopupForm";
+import SiteLogo from "./SiteLogo";
 import type { LandingData, LandingProductItem } from "../../lib/fetchLandingData";
 import { resolveCatalogVisual } from "../../lib/industryStockImages";
 import {
@@ -63,9 +64,7 @@ export default function UniformCategoryPageClient({
     <div className="premium-shell min-h-dvh">
       <nav className="premium-nav-bar fixed top-0 z-50 flex w-full items-center justify-between gap-2 px-3 py-2.5 pt-[max(0.625rem,env(safe-area-inset-top))] sm:px-6 md:px-8">
         <Link href="/" className="flex min-w-0 items-center gap-2">
-          <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-gradient-to-br from-primary/30 to-secondary/20 ring-1 ring-primary/30">
-            <span className="font-headline text-sm font-black text-primary">★</span>
-          </div>
+          <SiteLogo />
           <span className="truncate font-headline text-base font-bold tracking-tighter text-on-surface sm:text-xl">
             {brandName}
           </span>
