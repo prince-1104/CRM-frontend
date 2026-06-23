@@ -1,5 +1,7 @@
 "use client";
 
+import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import LandingCatalogBento from "./components/LandingCatalogBento";
 import AmbientScene from "./components/AmbientScene";
@@ -18,6 +20,7 @@ import ProductImageLightbox from "./components/ProductImageLightbox";
 import type { LandingData, LandingProductItem } from "../lib/fetchLandingData";
 import { resolveCatalogVisual } from "../lib/industryStockImages";
 import { collectHeroSlideshowImages } from "../lib/heroSlideshowImages";
+import { slugForCategoryName } from "../lib/uniformRoutes";
 
 const fallbackProducts: LandingProductItem[] = [
   { sku: "SU-CH-001", name: "Chef Coat Pro", category: "Catering", active: true },
@@ -112,6 +115,7 @@ export default function HomeClient({
   storefront,
   products: productsFromServer,
 }: LandingData) {
+  const router = useRouter();
   const [showPopup, setShowPopup] = useState(false);
   const [imageLightbox, setImageLightbox] = useState<{ src: string; alt: string } | null>(
     null,
@@ -175,6 +179,11 @@ export default function HomeClient({
   );
 
   function selectNavCategory(name: string) {
+    const slug = slugForCategoryName(name);
+    if (slug) {
+      router.push(`/${slug}`);
+      return;
+    }
     const lower = name.toLowerCase();
     const exact = filterOptions.find(
       (c) => c !== "All" && c.toLowerCase() === lower,
@@ -595,6 +604,26 @@ export default function HomeClient({
           <div className="text-lg font-black text-primary font-headline uppercase tracking-tighter">
             {brandName}
           </div>
+          <nav className="flex flex-wrap justify-center gap-x-4 gap-y-2 font-label text-[10px] uppercase tracking-widest text-on-surface-variant">
+            <Link href="/catering-uniforms" className="hover:text-primary">
+              Catering
+            </Link>
+            <Link href="/hotel-uniforms" className="hover:text-primary">
+              Hotels
+            </Link>
+            <Link href="/restaurant-uniforms" className="hover:text-primary">
+              Restaurants
+            </Link>
+            <Link href="/bar-uniforms" className="hover:text-primary">
+              Bar
+            </Link>
+            <Link href="/custom-orders" className="hover:text-primary">
+              Custom orders
+            </Link>
+            <Link href="/contact" className="hover:text-primary">
+              Contact
+            </Link>
+          </nav>
           <div className="flex flex-col items-center gap-3 md:flex-row md:gap-6">
             <a
               href="https://feedback.doptonin.online/u/Star_Uniform"

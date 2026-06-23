@@ -4,6 +4,12 @@ import { NextResponse } from "next/server";
 type LeadPayload = {
   name?: string;
   phone?: string;
+  company?: string;
+  email?: string;
+  category?: string;
+  quantity?: string;
+  requirement?: string;
+  source?: string;
 };
 
 type BackendErrorBody = {
@@ -40,6 +46,12 @@ export async function POST(request: Request) {
         body: JSON.stringify({
           full_name: body.name,
           phone: body.phone,
+          company: body.company,
+          email: body.email,
+          category: body.category,
+          quantity: body.quantity,
+          requirement: body.requirement,
+          source: body.source || "website_form",
         }),
       });
     } catch {
