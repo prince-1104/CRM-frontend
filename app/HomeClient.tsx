@@ -240,6 +240,16 @@ export default function HomeClient({
           })}
         </div>
         <div className="flex min-w-0 shrink-0 items-center gap-1.5 sm:gap-3">
+          <Link
+            href="/custom-orders"
+            className="touch-manipulation inline-flex min-h-[44px] shrink-0 items-center justify-center gap-1 rounded-full border border-primary/40 bg-primary/10 px-2.5 py-2 font-label text-[9px] font-bold uppercase tracking-widest text-primary ring-1 ring-primary/20 transition-all hover:bg-primary/20 active:scale-95 sm:gap-1.5 sm:px-3.5 sm:text-[10px] md:px-4 md:text-[11px]"
+            aria-label="Custom order"
+          >
+            <span className="material-symbols-outlined text-[16px] leading-none sm:text-[18px]" aria-hidden>
+              edit_note
+            </span>
+            <span className="hidden whitespace-nowrap sm:inline">Custom order</span>
+          </Link>
           <a
             href={CANONICAL_TEL_HREF}
             className="header-phone-glow touch-manipulation inline-flex min-h-[44px] shrink-0 items-center justify-center gap-1 rounded-full border border-fuchsia-400/40 bg-black/35 px-2 py-2 font-mono text-fuchsia-100 ring-1 ring-fuchsia-400/25 sm:gap-1.5 sm:px-3 sm:py-2.5"
