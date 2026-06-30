@@ -1,5 +1,6 @@
 import type { Metadata, Viewport } from "next";
 import { Analytics } from "@vercel/analytics/next";
+import { SpeedInsights } from "@vercel/speed-insights/next";
 import { Manrope, Space_Grotesk } from "next/font/google";
 import Script from "next/script";
 import "./globals.css";
@@ -72,6 +73,7 @@ export default function RootLayout({
         </Script>
 
         <Analytics />
+        <SpeedInsights />
       </body>
     </html>
   );
